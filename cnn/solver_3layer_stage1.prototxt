@@ -11,6 +11,7 @@ snapshot: 10000
 snapshot_prefix: "$snapshot"
 solver_mode: GPU
 random_seed: 1700
+average_loss: 5
 #debug_info: true
 
 ##splitmark##

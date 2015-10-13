@@ -58,8 +58,8 @@ layers {
   top: "pool1_1"
   pooling_param {
     pool: MAX
-    kernel_size: 2
-    stride: 2
+    kernel_size: 1
+    stride: 1
   }
 }
 layers {
@@ -98,8 +98,8 @@ layers {
   top: "pool1_2"
   pooling_param {
     pool: MAX
-    kernel_size: 2
-    stride: 2
+    kernel_size: 1
+    stride: 1
   }
 }
 layers {

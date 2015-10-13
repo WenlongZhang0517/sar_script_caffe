@@ -11,5 +11,6 @@ snapshot: 10000
 snapshot_prefix: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/model_stage1/"
 solver_mode: GPU
 random_seed: 1700
+average_loss: 5
 #debug_info: true
 
