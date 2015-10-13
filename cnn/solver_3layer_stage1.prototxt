@@ -1,3 +1,19 @@
+net: "$net"
+base_lr: 0.0001
+lr_policy: "step"
+gamma: 0.1
+stepsize: 500000000
+display: 5
+max_iter: 450000
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 10000
+snapshot_prefix: "$snapshot"
+solver_mode: GPU
+random_seed: 1700
+#debug_info: true
+
+##splitmark##
 
 name: "CaffeNet"
 layers {
@@ -6,8 +22,8 @@ layers {
   top: "data"
   top: "label"
   datum_data_param {
-    source: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/train_source.txt"
-    mean_file: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/mean_std.txt"
+    source: "$train_source"
+    mean_file: "$train_mean"
     shuffle: true
     batch_size: 128
     label_scale: 0.1

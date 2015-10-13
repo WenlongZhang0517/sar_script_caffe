@@ -11,6 +11,8 @@ snapshot: 10000
 snapshot_prefix: "$snapshot"
 solver_mode: GPU
 random_seed: 1700
+test_iter: 1000
+test_interval: 1000
 #debug_info: true
 
 ##splitmark##
@@ -27,13 +29,37 @@ layers {
     shuffle: true
     batch_size: 128
     label_scale: 0.1
+    binary_label: 0
   }
   transform_param {
     crop_size: 41
     mirror: true
     rotate: true
   }
+  include: { phase: TRAIN }
 }
+
+layers {
+  name: "data"
+  type: DATUM_DATA
+  top: "data"
+  top: "label"
+  datum_data_param {
+    source: "$test_source"
+    mean_file: "$train_mean"
+    shuffle: false
+    batch_size: 128
+    label_scale: 0.1
+    binary_label: 0
+  }
+  transform_param {
+    crop_size: 41
+    mirror: false
+    rotate: false
+  }
+  include: { phase: TEST }
+}
+
 layers {
   name: "conv1_1"
   type: CONVOLUTION
@@ -299,7 +325,7 @@ layers {
   weight_decay: 1
   weight_decay: 0
   convolution_param {
-    num_output: 1
+    num_output: 2
     kernel_size: 1
     weight_filler {
       type: "gaussian"
@@ -311,16 +337,18 @@ layers {
     }
   }
 }
-#layers {
-#  name: "out"
-#  type: SIGMOID
-#  bottom: "fc5"
-#  top: "out"
-#}
 layers {
   name: "loss"
-  type: EUCLIDEAN_LOSS
+  type: SOFTMAX_LOSS
   bottom: "fc5"
   bottom: "label"
   top: "loss"
+}
+layers {
+  name: "accuracy"
+  type: ACCURACY
+  bottom: "fc5"
+  bottom: "label"
+  top: "accuracy"
+  include: { phase: TEST }
 }
