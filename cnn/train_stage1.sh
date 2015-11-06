@@ -34,6 +34,5 @@ sed -i "s${fancyDelim}\$net${fancyDelim}${arch}${fancyDelim}g" ${solver}
 sed -i "s${fancyDelim}\$snapshot${fancyDelim}${modeldir}/${fancyDelim}g" ${solver}
 
 # 3. run
-gdb --args ../../caffe/build/tools/caffe train \
+gdb --args /home/lein/dev/caffe/build/tools/caffe train \
     --solver=${solver} 2>&1 | tee log.txt
-

@@ -1,0 +1,2496 @@
+GNU gdb (Ubuntu 7.7.1-0ubuntu5~14.04.2) 7.7.1
+Copyright (C) 2014 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from /home/lein/dev/caffe/build/tools/caffe...done.
+(gdb) r
+Starting program: /home/lein/dev/caffe/.build_debug/tools/caffe train --solver=.solver_split.prototxt --snapshot=/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/model/_iter_22000.solverstate
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+I1105 19:53:51.733415 13435 caffe.cpp:184] Using GPUs 0
+I1105 19:53:51.881865 13435 solver.cpp:54] Initializing solver from parameters: 
+test_iter: 70
+test_interval: 1000
+base_lr: 0.001
+display: 5
+max_iter: 450000
+lr_policy: "step"
+gamma: 0.1
+momentum: 0.9
+weight_decay: 0.0005
+stepsize: 50000
+snapshot: 5000
+snapshot_prefix: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/model/"
+solver_mode: GPU
+device_id: 0
+random_seed: 1700
+net: ".arch_train_val_split.prototxt"
+average_loss: 5
+I1105 19:53:51.882042 13435 solver.cpp:97] Creating training net from net file: .arch_train_val_split.prototxt
+I1105 19:53:51.882504 13435 net.cpp:339] The NetState phase (0) differed from the phase (1) specified by a rule in layer data
+I1105 19:53:51.882606 13435 net.cpp:50] Initializing net from parameters: 
+name: "CaffeNet"
+state {
+  phase: TRAIN
+}
+layer {
+  name: "data"
+  type: "DatumData"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    mirror: true
+    crop_size: 41
+    mean_value_file: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/mean_std.txt"
+    rotate: true
+  }
+  datum_data_param {
+    source: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/train_source.txt"
+    mean_file: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/mean_std.txt"
+    batch_size: 128
+    shuffle: true
+    label_scale: 0.1
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 5
+    weight_filler {
+      type: "uniform"
+      min: -0.05
+      max: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "conv1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 5
+    weight_filler {
+      type: "uniform"
+      min: -0.05
+      max: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv2"
+  top: "conv2"
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "conv2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "pool2"
+  top: "conv3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 5
+    weight_filler {
+      type: "uniform"
+      min: -0.05
+      max: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv3"
+  top: "conv3"
+}
+layer {
+  name: "fc4"
+  type: "InnerProduct"
+  bottom: "conv3"
+  top: "fc4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 2048
+    weight_filler {
+      type: "gaussian"
+      std: 0.0005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "fc4"
+  top: "fc4"
+}
+layer {
+  name: "fc5"
+  type: "InnerProduct"
+  bottom: "fc4"
+  top: "fc5"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.0005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "loss"
+  type: "EuclideanLoss"
+  bottom: "fc5"
+  bottom: "label"
+  top: "loss"
+}
+I1105 19:53:51.882799 13435 net.cpp:76] Memory required for data: 0
+I1105 19:53:51.882906 13435 layer_factory.hpp:76] Creating layer data
+I1105 19:53:51.882985 13435 net.cpp:110] Creating Layer data
+I1105 19:53:51.883003 13435 net.cpp:433] data -> data
+I1105 19:53:51.883085 13435 net.cpp:433] data -> label
+E1105 19:53:51.883134 13435 data_transformer.cpp:59] channel 0 : mean 54.31 std 26.24
+E1105 19:53:51.883222 13435 data_transformer.cpp:59] channel 1 : mean 29.85 std 4.18
+I1105 19:53:51.883258 13435 datum_data_layer.cpp:45] Opening file /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/train_source.txt
+I1105 19:53:51.883280 13435 datum_data_layer.cpp:57] Shuffling data
+I1105 19:53:51.883301 13435 datum_data_layer.cpp:62] A total of 13 images.
+E1105 19:53:51.883308 13435 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101008.batch : 0
+E1105 19:53:51.889219 13435 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110709.batch : 1
+I1105 19:53:51.921306 13435 datum_data_layer.cpp:86] output data size: 128,2,41,41
+I1105 19:53:51.923512 13435 base_data_layer.cpp:66] Initializing prefetch
+I1105 19:53:51.924180 13435 base_data_layer.cpp:69] Prefetch initialized.
+I1105 19:53:51.924190 13435 net.cpp:155] Setting up data
+I1105 19:53:51.924216 13435 net.cpp:163] Top shape: 128 2 41 41 (430336)
+I1105 19:53:51.924222 13435 net.cpp:163] Top shape: 128 1 1 1 (128)
+I1105 19:53:51.924226 13435 net.cpp:174] Memory required for data: 1721856
+I1105 19:53:51.924243 13435 layer_factory.hpp:76] Creating layer conv1
+I1105 19:53:51.924295 13435 net.cpp:110] Creating Layer conv1
+I1105 19:53:51.924314 13435 net.cpp:477] conv1 <- data
+I1105 19:53:51.924355 13435 net.cpp:433] conv1 -> conv1
+I1105 19:53:51.925109 13435 net.cpp:155] Setting up conv1
+I1105 19:53:51.925122 13435 net.cpp:163] Top shape: 128 64 37 37 (11214848)
+I1105 19:53:51.925123 13435 net.cpp:174] Memory required for data: 46581248
+I1105 19:53:51.925160 13435 layer_factory.hpp:76] Creating layer relu1
+I1105 19:53:51.925179 13435 net.cpp:110] Creating Layer relu1
+I1105 19:53:51.925184 13435 net.cpp:477] relu1 <- conv1
+I1105 19:53:51.925837 13435 net.cpp:419] relu1 -> conv1 (in-place)
+I1105 19:53:51.925856 13435 net.cpp:155] Setting up relu1
+I1105 19:53:51.925861 13435 net.cpp:163] Top shape: 128 64 37 37 (11214848)
+I1105 19:53:51.925864 13435 net.cpp:174] Memory required for data: 91440640
+I1105 19:53:51.925868 13435 layer_factory.hpp:76] Creating layer pool1
+[New Thread 0x7fffe95d7700 (LWP 13439)]
+[New Thread 0x7fffe0bff700 (LWP 13440)]
+[New Thread 0x7fffdbab7700 (LWP 13441)]
+I1105 19:53:51.927157 13435 net.cpp:110] Creating Layer pool1
+I1105 19:53:51.927168 13435 net.cpp:477] pool1 <- conv1
+I1105 19:53:51.927183 13435 net.cpp:433] pool1 -> pool1
+I1105 19:53:51.927242 13435 net.cpp:155] Setting up pool1
+I1105 19:53:51.927268 13435 net.cpp:163] Top shape: 128 64 19 19 (2957312)
+I1105 19:53:51.927270 13435 net.cpp:174] Memory required for data: 103269888
+I1105 19:53:51.927284 13435 layer_factory.hpp:76] Creating layer conv2
+I1105 19:53:51.927893 13435 net.cpp:110] Creating Layer conv2
+I1105 19:53:51.927914 13435 net.cpp:477] conv2 <- pool1
+I1105 19:53:51.927952 13435 net.cpp:433] conv2 -> conv2
+I1105 19:53:51.942716 13435 net.cpp:155] Setting up conv2
+I1105 19:53:51.942756 13435 net.cpp:163] Top shape: 128 128 15 15 (3686400)
+I1105 19:53:51.942759 13435 net.cpp:174] Memory required for data: 118015488
+I1105 19:53:51.942795 13435 layer_factory.hpp:76] Creating layer relu2
+I1105 19:53:51.942816 13435 net.cpp:110] Creating Layer relu2
+I1105 19:53:51.942834 13435 net.cpp:477] relu2 <- conv2
+I1105 19:53:51.942858 13435 net.cpp:419] relu2 -> conv2 (in-place)
+I1105 19:53:51.942873 13435 net.cpp:155] Setting up relu2
+I1105 19:53:51.942879 13435 net.cpp:163] Top shape: 128 128 15 15 (3686400)
+I1105 19:53:51.942881 13435 net.cpp:174] Memory required for data: 132761088
+I1105 19:53:51.942884 13435 layer_factory.hpp:76] Creating layer pool2
+I1105 19:53:51.942896 13435 net.cpp:110] Creating Layer pool2
+I1105 19:53:51.942901 13435 net.cpp:477] pool2 <- conv2
+I1105 19:53:51.942920 13435 net.cpp:433] pool2 -> pool2
+I1105 19:53:51.942975 13435 net.cpp:155] Setting up pool2
+I1105 19:53:51.942982 13435 net.cpp:163] Top shape: 128 128 8 8 (1048576)
+I1105 19:53:51.942984 13435 net.cpp:174] Memory required for data: 136955392
+I1105 19:53:51.942988 13435 layer_factory.hpp:76] Creating layer conv3
+I1105 19:53:51.943022 13435 net.cpp:110] Creating Layer conv3
+I1105 19:53:51.943028 13435 net.cpp:477] conv3 <- pool2
+I1105 19:53:51.943043 13435 net.cpp:433] conv3 -> conv3
+I1105 19:53:51.979436 13435 net.cpp:155] Setting up conv3
+I1105 19:53:51.979473 13435 net.cpp:163] Top shape: 128 128 4 4 (262144)
+I1105 19:53:51.979476 13435 net.cpp:174] Memory required for data: 138003968
+I1105 19:53:51.979521 13435 layer_factory.hpp:76] Creating layer relu3
+I1105 19:53:51.979569 13435 net.cpp:110] Creating Layer relu3
+I1105 19:53:51.979578 13435 net.cpp:477] relu3 <- conv3
+I1105 19:53:51.979591 13435 net.cpp:419] relu3 -> conv3 (in-place)
+I1105 19:53:51.979605 13435 net.cpp:155] Setting up relu3
+I1105 19:53:51.979610 13435 net.cpp:163] Top shape: 128 128 4 4 (262144)
+I1105 19:53:51.979612 13435 net.cpp:174] Memory required for data: 139052544
+I1105 19:53:51.979615 13435 layer_factory.hpp:76] Creating layer fc4
+I1105 19:53:51.979635 13435 net.cpp:110] Creating Layer fc4
+I1105 19:53:51.979640 13435 net.cpp:477] fc4 <- conv3
+I1105 19:53:51.979653 13435 net.cpp:433] fc4 -> fc4
+I1105 19:53:52.539885 13435 net.cpp:155] Setting up fc4
+I1105 19:53:52.539911 13435 net.cpp:163] Top shape: 128 2048 (262144)
+I1105 19:53:52.539913 13435 net.cpp:174] Memory required for data: 140101120
+I1105 19:53:52.539932 13435 layer_factory.hpp:76] Creating layer relu4
+I1105 19:53:52.539976 13435 net.cpp:110] Creating Layer relu4
+I1105 19:53:52.539995 13435 net.cpp:477] relu4 <- fc4
+I1105 19:53:52.540014 13435 net.cpp:419] relu4 -> fc4 (in-place)
+I1105 19:53:52.540029 13435 net.cpp:155] Setting up relu4
+I1105 19:53:52.540033 13435 net.cpp:163] Top shape: 128 2048 (262144)
+I1105 19:53:52.540035 13435 net.cpp:174] Memory required for data: 141149696
+I1105 19:53:52.540038 13435 layer_factory.hpp:76] Creating layer fc5
+I1105 19:53:52.540051 13435 net.cpp:110] Creating Layer fc5
+I1105 19:53:52.540056 13435 net.cpp:477] fc5 <- fc4
+I1105 19:53:52.540087 13435 net.cpp:433] fc5 -> fc5
+I1105 19:53:52.540455 13435 net.cpp:155] Setting up fc5
+I1105 19:53:52.540464 13435 net.cpp:163] Top shape: 128 1 (128)
+I1105 19:53:52.540467 13435 net.cpp:174] Memory required for data: 141150208
+I1105 19:53:52.540482 13435 layer_factory.hpp:76] Creating layer loss
+I1105 19:53:52.540519 13435 net.cpp:110] Creating Layer loss
+I1105 19:53:52.540524 13435 net.cpp:477] loss <- fc5
+I1105 19:53:52.540541 13435 net.cpp:477] loss <- label
+I1105 19:53:52.540550 13435 net.cpp:433] loss -> loss
+I1105 19:53:52.540594 13435 net.cpp:155] Setting up loss
+I1105 19:53:52.540601 13435 net.cpp:163] Top shape: (1)
+I1105 19:53:52.540602 13435 net.cpp:168]     with loss weight 1
+I1105 19:53:52.540611 13435 net.cpp:174] Memory required for data: 141150212
+I1105 19:53:52.540616 13435 net.cpp:236] loss needs backward computation.
+I1105 19:53:52.540619 13435 net.cpp:236] fc5 needs backward computation.
+I1105 19:53:52.540632 13435 net.cpp:236] relu4 needs backward computation.
+I1105 19:53:52.540634 13435 net.cpp:236] fc4 needs backward computation.
+I1105 19:53:52.540637 13435 net.cpp:236] relu3 needs backward computation.
+I1105 19:53:52.540639 13435 net.cpp:236] conv3 needs backward computation.
+I1105 19:53:52.540642 13435 net.cpp:236] pool2 needs backward computation.
+I1105 19:53:52.540644 13435 net.cpp:236] relu2 needs backward computation.
+I1105 19:53:52.540647 13435 net.cpp:236] conv2 needs backward computation.
+I1105 19:53:52.540650 13435 net.cpp:236] pool1 needs backward computation.
+I1105 19:53:52.540653 13435 net.cpp:236] relu1 needs backward computation.
+I1105 19:53:52.540657 13435 net.cpp:236] conv1 needs backward computation.
+I1105 19:53:52.540659 13435 net.cpp:240] data does not need backward computation.
+I1105 19:53:52.540663 13435 net.cpp:283] This network produces output loss
+I1105 19:53:52.540679 13435 net.cpp:297] Network initialization done.
+I1105 19:53:52.540683 13435 net.cpp:298] Memory required for data: 141150212
+I1105 19:53:52.541026 13435 solver.cpp:187] Creating test net (#0) specified by net file: .arch_train_val_split.prototxt
+I1105 19:53:52.541093 13435 net.cpp:339] The NetState phase (1) differed from the phase (0) specified by a rule in layer data
+I1105 19:53:52.541247 13435 net.cpp:50] Initializing net from parameters: 
+name: "CaffeNet"
+state {
+  phase: TEST
+}
+layer {
+  name: "data"
+  type: "DatumData"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    mirror: false
+    crop_size: 41
+    mean_value_file: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/mean_std.txt"
+    rotate: false
+  }
+  datum_data_param {
+    source: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/test_source.txt"
+    mean_file: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/mean_std.txt"
+    batch_size: 128
+    shuffle: true
+    label_scale: 0.1
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 64
+    kernel_size: 5
+    weight_filler {
+      type: "uniform"
+      min: -0.05
+      max: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "conv1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 5
+    weight_filler {
+      type: "uniform"
+      min: -0.05
+      max: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv2"
+  top: "conv2"
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "conv2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "pool2"
+  top: "conv3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 5
+    weight_filler {
+      type: "uniform"
+      min: -0.05
+      max: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv3"
+  top: "conv3"
+}
+layer {
+  name: "fc4"
+  type: "InnerProduct"
+  bottom: "conv3"
+  top: "fc4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 2048
+    weight_filler {
+      type: "gaussian"
+      std: 0.0005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "fc4"
+  top: "fc4"
+}
+layer {
+  name: "fc5"
+  type: "InnerProduct"
+  bottom: "fc4"
+  top: "fc5"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.0005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "loss"
+  type: "EuclideanLoss"
+  bottom: "fc5"
+  bottom: "label"
+  top: "loss"
+}
+I1105 19:53:52.541347 13435 net.cpp:76] Memory required for data: 0
+I1105 19:53:52.541376 13435 layer_factory.hpp:76] Creating layer data
+I1105 19:53:52.541411 13435 net.cpp:110] Creating Layer data
+I1105 19:53:52.541420 13435 net.cpp:433] data -> data
+I1105 19:53:52.541437 13435 net.cpp:433] data -> label
+E1105 19:53:52.541465 13435 data_transformer.cpp:59] channel 0 : mean 54.31 std 26.24
+E1105 19:53:52.541481 13435 data_transformer.cpp:59] channel 1 : mean 29.85 std 4.18
+I1105 19:53:52.541491 13435 datum_data_layer.cpp:45] Opening file /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/test_source.txt
+I1105 19:53:52.541499 13435 datum_data_layer.cpp:57] Shuffling data
+I1105 19:53:52.541507 13435 datum_data_layer.cpp:62] A total of 1 images.
+E1105 19:53:52.541509 13435 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110811.batch : 0
+E1105 19:53:52.578205 13435 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110811.batch : 0
+I1105 19:53:52.622525 13435 datum_data_layer.cpp:86] output data size: 128,2,41,41
+I1105 19:53:52.624850 13435 base_data_layer.cpp:66] Initializing prefetch
+I1105 19:53:52.625430 13435 base_data_layer.cpp:69] Prefetch initialized.
+I1105 19:53:52.625442 13435 net.cpp:155] Setting up data
+I1105 19:53:52.625478 13435 net.cpp:163] Top shape: 128 2 41 41 (430336)
+I1105 19:53:52.625488 13435 net.cpp:163] Top shape: 128 1 1 1 (128)
+I1105 19:53:52.625491 13435 net.cpp:174] Memory required for data: 1721856
+I1105 19:53:52.625507 13435 layer_factory.hpp:76] Creating layer conv1
+I1105 19:53:52.625574 13435 net.cpp:110] Creating Layer conv1
+I1105 19:53:52.625592 13435 net.cpp:477] conv1 <- data
+I1105 19:53:52.625624 13435 net.cpp:433] conv1 -> conv1
+I1105 19:53:52.626000 13435 net.cpp:155] Setting up conv1
+I1105 19:53:52.626020 13435 net.cpp:163] Top shape: 128 64 37 37 (11214848)
+I1105 19:53:52.626022 13435 net.cpp:174] Memory required for data: 46581248
+I1105 19:53:52.626054 13435 layer_factory.hpp:76] Creating layer relu1
+I1105 19:53:52.626067 13435 net.cpp:110] Creating Layer relu1
+I1105 19:53:52.626072 13435 net.cpp:477] relu1 <- conv1
+I1105 19:53:52.626087 13435 net.cpp:419] relu1 -> conv1 (in-place)
+I1105 19:53:52.626099 13435 net.cpp:155] Setting up relu1
+I1105 19:53:52.626104 13435 net.cpp:163] Top shape: 128 64 37 37 (11214848)
+I1105 19:53:52.626106 13435 net.cpp:174] Memory required for data: 91440640
+I1105 19:53:52.626109 13435 layer_factory.hpp:76] Creating layer pool1
+I1105 19:53:52.626121 13435 net.cpp:110] Creating Layer pool1
+I1105 19:53:52.626126 13435 net.cpp:477] pool1 <- conv1
+I1105 19:53:52.626134 13435 net.cpp:433] pool1 -> pool1
+I1105 19:53:52.626404 13435 net.cpp:155] Setting up pool1
+I1105 19:53:52.626415 13435 net.cpp:163] Top shape: 128 64 19 19 (2957312)
+I1105 19:53:52.626427 13435 net.cpp:174] Memory required for data: 103269888
+I1105 19:53:52.626432 13435 layer_factory.hpp:76] Creating layer conv2
+I1105 19:53:52.626451 13435 net.cpp:110] Creating Layer conv2
+I1105 19:53:52.626467 13435 net.cpp:477] conv2 <- pool1
+I1105 19:53:52.626493 13435 net.cpp:433] conv2 -> conv2
+I1105 19:53:52.636745 13435 net.cpp:155] Setting up conv2
+I1105 19:53:52.636776 13435 net.cpp:163] Top shape: 128 128 15 15 (3686400)
+I1105 19:53:52.636780 13435 net.cpp:174] Memory required for data: 118015488
+I1105 19:53:52.636816 13435 layer_factory.hpp:76] Creating layer relu2
+I1105 19:53:52.636833 13435 net.cpp:110] Creating Layer relu2
+I1105 19:53:52.636842 13435 net.cpp:477] relu2 <- conv2
+I1105 19:53:52.636854 13435 net.cpp:419] relu2 -> conv2 (in-place)
+I1105 19:53:52.636876 13435 net.cpp:155] Setting up relu2
+I1105 19:53:52.636890 13435 net.cpp:163] Top shape: 128 128 15 15 (3686400)
+I1105 19:53:52.636893 13435 net.cpp:174] Memory required for data: 132761088
+I1105 19:53:52.636895 13435 layer_factory.hpp:76] Creating layer pool2
+I1105 19:53:52.636916 13435 net.cpp:110] Creating Layer pool2
+I1105 19:53:52.636930 13435 net.cpp:477] pool2 <- conv2
+I1105 19:53:52.636940 13435 net.cpp:433] pool2 -> pool2
+I1105 19:53:52.637003 13435 net.cpp:155] Setting up pool2
+I1105 19:53:52.637011 13435 net.cpp:163] Top shape: 128 128 8 8 (1048576)
+I1105 19:53:52.637022 13435 net.cpp:174] Memory required for data: 136955392
+I1105 19:53:52.637027 13435 layer_factory.hpp:76] Creating layer conv3
+I1105 19:53:52.637053 13435 net.cpp:110] Creating Layer conv3
+I1105 19:53:52.637058 13435 net.cpp:477] conv3 <- pool2
+I1105 19:53:52.637071 13435 net.cpp:433] conv3 -> conv3
+I1105 19:53:52.655722 13435 net.cpp:155] Setting up conv3
+I1105 19:53:52.655747 13435 net.cpp:163] Top shape: 128 128 4 4 (262144)
+I1105 19:53:52.655750 13435 net.cpp:174] Memory required for data: 138003968
+I1105 19:53:52.655781 13435 layer_factory.hpp:76] Creating layer relu3
+I1105 19:53:52.655802 13435 net.cpp:110] Creating Layer relu3
+I1105 19:53:52.655817 13435 net.cpp:477] relu3 <- conv3
+I1105 19:53:52.655874 13435 net.cpp:419] relu3 -> conv3 (in-place)
+I1105 19:53:52.655889 13435 net.cpp:155] Setting up relu3
+I1105 19:53:52.655894 13435 net.cpp:163] Top shape: 128 128 4 4 (262144)
+I1105 19:53:52.655895 13435 net.cpp:174] Memory required for data: 139052544
+I1105 19:53:52.655899 13435 layer_factory.hpp:76] Creating layer fc4
+I1105 19:53:52.655911 13435 net.cpp:110] Creating Layer fc4
+I1105 19:53:52.655917 13435 net.cpp:477] fc4 <- conv3
+I1105 19:53:52.655930 13435 net.cpp:433] fc4 -> fc4
+I1105 19:53:53.191004 13435 net.cpp:155] Setting up fc4
+I1105 19:53:53.191028 13435 net.cpp:163] Top shape: 128 2048 (262144)
+I1105 19:53:53.191031 13435 net.cpp:174] Memory required for data: 140101120
+I1105 19:53:53.191052 13435 layer_factory.hpp:76] Creating layer relu4
+I1105 19:53:53.191081 13435 net.cpp:110] Creating Layer relu4
+I1105 19:53:53.191090 13435 net.cpp:477] relu4 <- fc4
+I1105 19:53:53.191109 13435 net.cpp:419] relu4 -> fc4 (in-place)
+I1105 19:53:53.191124 13435 net.cpp:155] Setting up relu4
+I1105 19:53:53.191129 13435 net.cpp:163] Top shape: 128 2048 (262144)
+I1105 19:53:53.191131 13435 net.cpp:174] Memory required for data: 141149696
+I1105 19:53:53.191135 13435 layer_factory.hpp:76] Creating layer fc5
+I1105 19:53:53.191149 13435 net.cpp:110] Creating Layer fc5
+I1105 19:53:53.191154 13435 net.cpp:477] fc5 <- fc4
+I1105 19:53:53.191165 13435 net.cpp:433] fc5 -> fc5
+I1105 19:53:53.191520 13435 net.cpp:155] Setting up fc5
+I1105 19:53:53.191530 13435 net.cpp:163] Top shape: 128 1 (128)
+I1105 19:53:53.191534 13435 net.cpp:174] Memory required for data: 141150208
+I1105 19:53:53.191550 13435 layer_factory.hpp:76] Creating layer loss
+I1105 19:53:53.191561 13435 net.cpp:110] Creating Layer loss
+I1105 19:53:53.191566 13435 net.cpp:477] loss <- fc5
+I1105 19:53:53.191575 13435 net.cpp:477] loss <- label
+I1105 19:53:53.191582 13435 net.cpp:433] loss -> loss
+I1105 19:53:53.191617 13435 net.cpp:155] Setting up loss
+I1105 19:53:53.191623 13435 net.cpp:163] Top shape: (1)
+I1105 19:53:53.191627 13435 net.cpp:168]     with loss weight 1
+I1105 19:53:53.191635 13435 net.cpp:174] Memory required for data: 141150212
+I1105 19:53:53.191640 13435 net.cpp:236] loss needs backward computation.
+I1105 19:53:53.191644 13435 net.cpp:236] fc5 needs backward computation.
+I1105 19:53:53.191648 13435 net.cpp:236] relu4 needs backward computation.
+I1105 19:53:53.191650 13435 net.cpp:236] fc4 needs backward computation.
+I1105 19:53:53.191653 13435 net.cpp:236] relu3 needs backward computation.
+I1105 19:53:53.191656 13435 net.cpp:236] conv3 needs backward computation.
+I1105 19:53:53.191659 13435 net.cpp:236] pool2 needs backward computation.
+I1105 19:53:53.191663 13435 net.cpp:236] relu2 needs backward computation.
+I1105 19:53:53.191665 13435 net.cpp:236] conv2 needs backward computation.
+I1105 19:53:53.191668 13435 net.cpp:236] pool1 needs backward computation.
+I1105 19:53:53.191671 13435 net.cpp:236] relu1 needs backward computation.
+I1105 19:53:53.191674 13435 net.cpp:236] conv1 needs backward computation.
+I1105 19:53:53.191679 13435 net.cpp:240] data does not need backward computation.
+I1105 19:53:53.191681 13435 net.cpp:283] This network produces output loss
+I1105 19:53:53.191696 13435 net.cpp:297] Network initialization done.
+I1105 19:53:53.191699 13435 net.cpp:298] Memory required for data: 141150212
+I1105 19:53:53.191756 13435 solver.cpp:66] Solver scaffolding done.
+I1105 19:53:53.192023 13435 caffe.cpp:202] Resuming from /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/model/_iter_22000.solverstate
+I1105 19:53:53.370100 13435 net.cpp:849] Copying source layer data
+I1105 19:53:53.370123 13435 net.cpp:849] Copying source layer conv1
+I1105 19:53:53.370189 13435 net.cpp:849] Copying source layer relu1
+I1105 19:53:53.370193 13435 net.cpp:849] Copying source layer pool1
+I1105 19:53:53.370195 13435 net.cpp:849] Copying source layer conv2
+I1105 19:53:53.371855 13435 net.cpp:849] Copying source layer relu2
+I1105 19:53:53.371857 13435 net.cpp:849] Copying source layer pool2
+I1105 19:53:53.371860 13435 net.cpp:849] Copying source layer conv3
+I1105 19:53:53.375159 13435 net.cpp:849] Copying source layer relu3
+I1105 19:53:53.375164 13435 net.cpp:849] Copying source layer fc4
+I1105 19:53:53.409292 13435 net.cpp:849] Copying source layer relu4
+I1105 19:53:53.409313 13435 net.cpp:849] Copying source layer fc5
+I1105 19:53:53.409337 13435 net.cpp:849] Copying source layer loss
+I1105 19:53:53.409510 13435 solver.cpp:800] SGDSolver: restoring history
+I1105 19:53:53.453901 13435 caffe.cpp:212] Starting Optimization
+I1105 19:53:53.453922 13435 solver.cpp:296] Solving CaffeNet
+I1105 19:53:53.453925 13435 solver.cpp:297] Learning Rate Policy: step
+I1105 19:53:53.454524 13435 solver.cpp:349] Iteration 22000, Testing net (#0)
+I1105 19:53:53.454546 13435 net.cpp:781] Copying source layer data
+I1105 19:53:53.454550 13435 net.cpp:781] Copying source layer conv1
+I1105 19:53:53.454730 13435 net.cpp:781] Copying source layer relu1
+I1105 19:53:53.454735 13435 net.cpp:781] Copying source layer pool1
+I1105 19:53:53.454736 13435 net.cpp:781] Copying source layer conv2
+I1105 19:53:53.454939 13435 net.cpp:781] Copying source layer relu2
+I1105 19:53:53.454946 13435 net.cpp:781] Copying source layer pool2
+I1105 19:53:53.454948 13435 net.cpp:781] Copying source layer conv3
+I1105 19:53:53.455173 13435 net.cpp:781] Copying source layer relu3
+I1105 19:53:53.455178 13435 net.cpp:781] Copying source layer fc4
+I1105 19:53:53.456708 13435 net.cpp:781] Copying source layer relu4
+I1105 19:53:53.456714 13435 net.cpp:781] Copying source layer fc5
+I1105 19:53:53.456746 13435 net.cpp:781] Copying source layer loss
+I1105 19:53:54.701917 13435 blocking_queue.cpp:50] Data layer prefetch queue empty
+E1105 19:53:57.829854 13435 solver.cpp:417]     Test net output #0: loss = 0.0137856 (* 1 = 0.0137856 loss)
+I1105 19:53:57.959601 13435 solver.cpp:243] Iteration 22000, loss = 0.0331841
+I1105 19:53:57.959650 13435 solver.cpp:592] Iteration 22000, lr = 0.001
+I1105 19:53:58.975261 13435 solver.cpp:243] Iteration 22005, loss = 0.0312709
+I1105 19:53:58.975288 13435 solver.cpp:592] Iteration 22005, lr = 0.001
+I1105 19:53:59.964305 13435 solver.cpp:243] Iteration 22010, loss = 0.0134806
+I1105 19:53:59.964331 13435 solver.cpp:592] Iteration 22010, lr = 0.001
+E1105 19:54:00.291292 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100806.batch : 2
+E1105 19:54:00.317214 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100822.batch : 3
+I1105 19:54:01.018702 13435 solver.cpp:243] Iteration 22015, loss = 0.0122609
+I1105 19:54:01.018730 13435 solver.cpp:592] Iteration 22015, lr = 0.001
+I1105 19:54:01.992143 13435 solver.cpp:243] Iteration 22020, loss = 0.0139266
+I1105 19:54:01.992172 13435 solver.cpp:592] Iteration 22020, lr = 0.001
+I1105 19:54:02.982053 13435 solver.cpp:243] Iteration 22025, loss = 0.013139
+I1105 19:54:02.982079 13435 solver.cpp:592] Iteration 22025, lr = 0.001
+I1105 19:54:03.970684 13435 solver.cpp:243] Iteration 22030, loss = 0.0134434
+I1105 19:54:03.970713 13435 solver.cpp:592] Iteration 22030, lr = 0.001
+I1105 19:54:04.968853 13435 solver.cpp:243] Iteration 22035, loss = 0.0123332
+I1105 19:54:04.968880 13435 solver.cpp:592] Iteration 22035, lr = 0.001
+I1105 19:54:05.923545 13435 solver.cpp:243] Iteration 22040, loss = 0.0140023
+I1105 19:54:05.923584 13435 solver.cpp:592] Iteration 22040, lr = 0.001
+I1105 19:54:06.922370 13435 solver.cpp:243] Iteration 22045, loss = 0.0088896
+I1105 19:54:06.922396 13435 solver.cpp:592] Iteration 22045, lr = 0.001
+I1105 19:54:07.921499 13435 solver.cpp:243] Iteration 22050, loss = 0.0117776
+I1105 19:54:07.921525 13435 solver.cpp:592] Iteration 22050, lr = 0.001
+I1105 19:54:08.958333 13435 solver.cpp:243] Iteration 22055, loss = 0.00968502
+I1105 19:54:08.958359 13435 solver.cpp:592] Iteration 22055, lr = 0.001
+I1105 19:54:09.955183 13435 solver.cpp:243] Iteration 22060, loss = 0.00927922
+I1105 19:54:09.955210 13435 solver.cpp:592] Iteration 22060, lr = 0.001
+I1105 19:54:10.956202 13435 solver.cpp:243] Iteration 22065, loss = 0.00944339
+I1105 19:54:10.956228 13435 solver.cpp:592] Iteration 22065, lr = 0.001
+I1105 19:54:11.949115 13435 solver.cpp:243] Iteration 22070, loss = 0.0109315
+I1105 19:54:11.949142 13435 solver.cpp:592] Iteration 22070, lr = 0.001
+I1105 19:54:12.947155 13435 solver.cpp:243] Iteration 22075, loss = 0.0107073
+I1105 19:54:12.947181 13435 solver.cpp:592] Iteration 22075, lr = 0.001
+I1105 19:54:13.906708 13435 solver.cpp:243] Iteration 22080, loss = 0.0103345
+I1105 19:54:13.906738 13435 solver.cpp:592] Iteration 22080, lr = 0.001
+I1105 19:54:14.950603 13435 solver.cpp:243] Iteration 22085, loss = 0.00939213
+I1105 19:54:14.950630 13435 solver.cpp:592] Iteration 22085, lr = 0.001
+I1105 19:54:15.946172 13435 solver.cpp:243] Iteration 22090, loss = 0.00931244
+I1105 19:54:15.946200 13435 solver.cpp:592] Iteration 22090, lr = 0.001
+I1105 19:54:16.944413 13435 solver.cpp:243] Iteration 22095, loss = 0.00999719
+I1105 19:54:16.944440 13435 solver.cpp:592] Iteration 22095, lr = 0.001
+I1105 19:54:17.937304 13435 solver.cpp:243] Iteration 22100, loss = 0.008135
+I1105 19:54:17.937330 13435 solver.cpp:592] Iteration 22100, lr = 0.001
+I1105 19:54:18.899523 13435 solver.cpp:243] Iteration 22105, loss = 0.0101298
+I1105 19:54:18.899550 13435 solver.cpp:592] Iteration 22105, lr = 0.001
+I1105 19:54:19.941525 13435 solver.cpp:243] Iteration 22110, loss = 0.0107384
+I1105 19:54:19.941551 13435 solver.cpp:592] Iteration 22110, lr = 0.001
+I1105 19:54:20.891544 13435 solver.cpp:243] Iteration 22115, loss = 0.00963636
+I1105 19:54:20.891576 13435 solver.cpp:592] Iteration 22115, lr = 0.001
+I1105 19:54:21.932456 13435 solver.cpp:243] Iteration 22120, loss = 0.00764345
+I1105 19:54:21.932551 13435 solver.cpp:592] Iteration 22120, lr = 0.001
+I1105 19:54:22.931679 13435 solver.cpp:243] Iteration 22125, loss = 0.0105156
+I1105 19:54:22.931707 13435 solver.cpp:592] Iteration 22125, lr = 0.001
+I1105 19:54:23.892314 13435 solver.cpp:243] Iteration 22130, loss = 0.0097837
+I1105 19:54:23.892354 13435 solver.cpp:592] Iteration 22130, lr = 0.001
+E1105 19:54:24.267868 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110725.batch : 4
+E1105 19:54:24.297412 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100730.batch : 5
+I1105 19:54:24.937482 13435 solver.cpp:243] Iteration 22135, loss = 0.00844792
+I1105 19:54:24.937520 13435 solver.cpp:592] Iteration 22135, lr = 0.001
+I1105 19:54:25.937568 13435 solver.cpp:243] Iteration 22140, loss = 0.00766528
+I1105 19:54:25.937594 13435 solver.cpp:592] Iteration 22140, lr = 0.001
+I1105 19:54:26.938117 13435 solver.cpp:243] Iteration 22145, loss = 0.00618977
+I1105 19:54:26.938161 13435 solver.cpp:592] Iteration 22145, lr = 0.001
+I1105 19:54:27.934882 13435 solver.cpp:243] Iteration 22150, loss = 0.00727461
+I1105 19:54:27.934909 13435 solver.cpp:592] Iteration 22150, lr = 0.001
+I1105 19:54:28.934243 13435 solver.cpp:243] Iteration 22155, loss = 0.00590869
+I1105 19:54:28.934270 13435 solver.cpp:592] Iteration 22155, lr = 0.001
+I1105 19:54:29.930074 13435 solver.cpp:243] Iteration 22160, loss = 0.00583625
+I1105 19:54:29.930100 13435 solver.cpp:592] Iteration 22160, lr = 0.001
+I1105 19:54:30.934820 13435 solver.cpp:243] Iteration 22165, loss = 0.00514328
+I1105 19:54:30.934847 13435 solver.cpp:592] Iteration 22165, lr = 0.001
+I1105 19:54:31.930454 13435 solver.cpp:243] Iteration 22170, loss = 0.00471901
+I1105 19:54:31.930481 13435 solver.cpp:592] Iteration 22170, lr = 0.001
+I1105 19:54:32.929172 13435 solver.cpp:243] Iteration 22175, loss = 0.00474575
+I1105 19:54:32.929199 13435 solver.cpp:592] Iteration 22175, lr = 0.001
+I1105 19:54:33.927377 13435 solver.cpp:243] Iteration 22180, loss = 0.00390544
+I1105 19:54:33.927404 13435 solver.cpp:592] Iteration 22180, lr = 0.001
+I1105 19:54:34.883180 13435 solver.cpp:243] Iteration 22185, loss = 0.00379014
+I1105 19:54:34.883219 13435 solver.cpp:592] Iteration 22185, lr = 0.001
+I1105 19:54:35.919459 13435 solver.cpp:243] Iteration 22190, loss = 0.00463589
+I1105 19:54:35.919486 13435 solver.cpp:592] Iteration 22190, lr = 0.001
+I1105 19:54:36.887819 13435 solver.cpp:243] Iteration 22195, loss = 0.00428484
+I1105 19:54:36.887850 13435 solver.cpp:592] Iteration 22195, lr = 0.001
+I1105 19:54:37.932421 13435 solver.cpp:243] Iteration 22200, loss = 0.00430563
+I1105 19:54:37.932447 13435 solver.cpp:592] Iteration 22200, lr = 0.001
+I1105 19:54:38.887825 13435 solver.cpp:243] Iteration 22205, loss = 0.00488204
+I1105 19:54:38.887856 13435 solver.cpp:592] Iteration 22205, lr = 0.001
+I1105 19:54:39.946435 13435 solver.cpp:243] Iteration 22210, loss = 0.00453324
+I1105 19:54:39.946461 13435 solver.cpp:592] Iteration 22210, lr = 0.001
+I1105 19:54:40.923105 13435 solver.cpp:243] Iteration 22215, loss = 0.00368379
+I1105 19:54:40.923132 13435 solver.cpp:592] Iteration 22215, lr = 0.001
+I1105 19:54:41.962832 13435 solver.cpp:243] Iteration 22220, loss = 0.00499614
+I1105 19:54:41.962859 13435 solver.cpp:592] Iteration 22220, lr = 0.001
+E1105 19:54:42.392335 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100829.batch : 6
+E1105 19:54:42.396507 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110720.batch : 7
+I1105 19:54:42.969321 13435 solver.cpp:243] Iteration 22225, loss = 0.00445642
+I1105 19:54:42.969352 13435 solver.cpp:592] Iteration 22225, lr = 0.001
+I1105 19:54:43.966773 13435 solver.cpp:243] Iteration 22230, loss = 0.013384
+I1105 19:54:43.966811 13435 solver.cpp:592] Iteration 22230, lr = 0.001
+I1105 19:54:44.969615 13435 solver.cpp:243] Iteration 22235, loss = 0.00969375
+I1105 19:54:44.969643 13435 solver.cpp:592] Iteration 22235, lr = 0.001
+I1105 19:54:45.970526 13435 solver.cpp:243] Iteration 22240, loss = 0.0106585
+I1105 19:54:45.970584 13435 solver.cpp:592] Iteration 22240, lr = 0.001
+I1105 19:54:46.965592 13435 solver.cpp:243] Iteration 22245, loss = 0.00993371
+I1105 19:54:46.965620 13435 solver.cpp:592] Iteration 22245, lr = 0.001
+I1105 19:54:47.966577 13435 solver.cpp:243] Iteration 22250, loss = 0.0101776
+I1105 19:54:47.966615 13435 solver.cpp:592] Iteration 22250, lr = 0.001
+E1105 19:54:48.108057 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101003.batch : 8
+E1105 19:54:48.122766 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100929.batch : 9
+I1105 19:54:48.971559 13435 solver.cpp:243] Iteration 22255, loss = 0.0192179
+I1105 19:54:48.971587 13435 solver.cpp:592] Iteration 22255, lr = 0.001
+I1105 19:54:49.937168 13435 solver.cpp:243] Iteration 22260, loss = 0.0371229
+I1105 19:54:49.937196 13435 solver.cpp:592] Iteration 22260, lr = 0.001
+I1105 19:54:50.975996 13435 solver.cpp:243] Iteration 22265, loss = 0.0230214
+I1105 19:54:50.976023 13435 solver.cpp:592] Iteration 22265, lr = 0.001
+I1105 19:54:51.974167 13435 solver.cpp:243] Iteration 22270, loss = 0.0153902
+I1105 19:54:51.974247 13435 solver.cpp:592] Iteration 22270, lr = 0.001
+I1105 19:54:52.975369 13435 solver.cpp:243] Iteration 22275, loss = 0.0111343
+I1105 19:54:52.975399 13435 solver.cpp:592] Iteration 22275, lr = 0.001
+I1105 19:54:53.926133 13435 solver.cpp:243] Iteration 22280, loss = 0.011442
+I1105 19:54:53.926163 13435 solver.cpp:592] Iteration 22280, lr = 0.001
+I1105 19:54:54.968024 13435 solver.cpp:243] Iteration 22285, loss = 0.0111639
+I1105 19:54:54.968050 13435 solver.cpp:592] Iteration 22285, lr = 0.001
+I1105 19:54:55.964442 13435 solver.cpp:243] Iteration 22290, loss = 0.0103366
+I1105 19:54:55.964468 13435 solver.cpp:592] Iteration 22290, lr = 0.001
+I1105 19:54:56.963922 13435 solver.cpp:243] Iteration 22295, loss = 0.0100132
+I1105 19:54:56.963948 13435 solver.cpp:592] Iteration 22295, lr = 0.001
+I1105 19:54:57.959422 13435 solver.cpp:243] Iteration 22300, loss = 0.00921799
+I1105 19:54:57.959447 13435 solver.cpp:592] Iteration 22300, lr = 0.001
+I1105 19:54:58.954545 13435 solver.cpp:243] Iteration 22305, loss = 0.00979326
+I1105 19:54:58.954572 13435 solver.cpp:592] Iteration 22305, lr = 0.001
+I1105 19:54:59.953090 13435 solver.cpp:243] Iteration 22310, loss = 0.0094308
+I1105 19:54:59.953116 13435 solver.cpp:592] Iteration 22310, lr = 0.001
+I1105 19:55:00.952482 13435 solver.cpp:243] Iteration 22315, loss = 0.00861891
+I1105 19:55:00.952509 13435 solver.cpp:592] Iteration 22315, lr = 0.001
+I1105 19:55:01.947901 13435 solver.cpp:243] Iteration 22320, loss = 0.00940558
+I1105 19:55:01.947927 13435 solver.cpp:592] Iteration 22320, lr = 0.001
+I1105 19:55:02.948218 13435 solver.cpp:243] Iteration 22325, loss = 0.00845131
+I1105 19:55:02.948245 13435 solver.cpp:592] Iteration 22325, lr = 0.001
+I1105 19:55:03.945281 13435 solver.cpp:243] Iteration 22330, loss = 0.00999192
+I1105 19:55:03.945310 13435 solver.cpp:592] Iteration 22330, lr = 0.001
+I1105 19:55:04.943862 13435 solver.cpp:243] Iteration 22335, loss = 0.00785541
+I1105 19:55:04.943899 13435 solver.cpp:592] Iteration 22335, lr = 0.001
+I1105 19:55:05.944964 13435 solver.cpp:243] Iteration 22340, loss = 0.00757607
+I1105 19:55:05.944991 13435 solver.cpp:592] Iteration 22340, lr = 0.001
+I1105 19:55:06.940065 13435 solver.cpp:243] Iteration 22345, loss = 0.0100278
+I1105 19:55:06.940101 13435 solver.cpp:592] Iteration 22345, lr = 0.001
+E1105 19:55:07.468993 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100909.batch : 10
+E1105 19:55:07.478438 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110710.batch : 11
+I1105 19:55:07.959918 13435 solver.cpp:243] Iteration 22350, loss = 0.00812588
+I1105 19:55:07.959954 13435 solver.cpp:592] Iteration 22350, lr = 0.001
+I1105 19:55:08.942662 13435 solver.cpp:243] Iteration 22355, loss = 0.0149122
+I1105 19:55:08.942687 13435 solver.cpp:592] Iteration 22355, lr = 0.001
+I1105 19:55:09.938462 13435 solver.cpp:243] Iteration 22360, loss = 0.0137343
+I1105 19:55:09.938488 13435 solver.cpp:592] Iteration 22360, lr = 0.001
+I1105 19:55:10.940604 13435 solver.cpp:243] Iteration 22365, loss = 0.00826204
+I1105 19:55:10.940632 13435 solver.cpp:592] Iteration 22365, lr = 0.001
+I1105 19:55:11.937608 13435 solver.cpp:243] Iteration 22370, loss = 0.00859709
+I1105 19:55:11.937634 13435 solver.cpp:592] Iteration 22370, lr = 0.001
+I1105 19:55:12.935223 13435 solver.cpp:243] Iteration 22375, loss = 0.00740912
+I1105 19:55:12.935250 13435 solver.cpp:592] Iteration 22375, lr = 0.001
+I1105 19:55:13.933055 13435 solver.cpp:243] Iteration 22380, loss = 0.0062265
+I1105 19:55:13.933081 13435 solver.cpp:592] Iteration 22380, lr = 0.001
+I1105 19:55:14.924618 13435 solver.cpp:243] Iteration 22385, loss = 0.00622562
+I1105 19:55:14.924654 13435 solver.cpp:592] Iteration 22385, lr = 0.001
+I1105 19:55:15.922459 13435 solver.cpp:243] Iteration 22390, loss = 0.0062408
+I1105 19:55:15.922497 13435 solver.cpp:592] Iteration 22390, lr = 0.001
+I1105 19:55:16.923435 13435 solver.cpp:243] Iteration 22395, loss = 0.00614607
+I1105 19:55:16.923463 13435 solver.cpp:592] Iteration 22395, lr = 0.001
+I1105 19:55:17.880107 13435 solver.cpp:243] Iteration 22400, loss = 0.00640615
+I1105 19:55:17.880134 13435 solver.cpp:592] Iteration 22400, lr = 0.001
+E1105 19:55:18.039106 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101006.batch : 12
+E1105 19:55:18.059133 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100730.batch : 0
+I1105 19:55:18.938474 13435 solver.cpp:243] Iteration 22405, loss = 0.00732893
+I1105 19:55:18.938531 13435 solver.cpp:592] Iteration 22405, lr = 0.001
+I1105 19:55:19.915061 13435 solver.cpp:243] Iteration 22410, loss = 0.0129679
+I1105 19:55:19.915087 13435 solver.cpp:592] Iteration 22410, lr = 0.001
+I1105 19:55:20.920081 13435 solver.cpp:243] Iteration 22415, loss = 0.00928518
+I1105 19:55:20.920107 13435 solver.cpp:592] Iteration 22415, lr = 0.001
+I1105 19:55:21.916822 13435 solver.cpp:243] Iteration 22420, loss = 0.00968056
+I1105 19:55:21.916848 13435 solver.cpp:592] Iteration 22420, lr = 0.001
+I1105 19:55:22.912981 13435 solver.cpp:243] Iteration 22425, loss = 0.0096551
+I1105 19:55:22.913123 13435 solver.cpp:592] Iteration 22425, lr = 0.001
+I1105 19:55:23.910706 13435 solver.cpp:243] Iteration 22430, loss = 0.00804966
+I1105 19:55:23.910740 13435 solver.cpp:592] Iteration 22430, lr = 0.001
+I1105 19:55:24.910689 13435 solver.cpp:243] Iteration 22435, loss = 0.00739432
+I1105 19:55:24.910717 13435 solver.cpp:592] Iteration 22435, lr = 0.001
+I1105 19:55:25.864792 13435 solver.cpp:243] Iteration 22440, loss = 0.00840647
+I1105 19:55:25.864822 13435 solver.cpp:592] Iteration 22440, lr = 0.001
+I1105 19:55:26.904295 13435 solver.cpp:243] Iteration 22445, loss = 0.00903962
+I1105 19:55:26.904322 13435 solver.cpp:592] Iteration 22445, lr = 0.001
+I1105 19:55:27.907762 13435 solver.cpp:243] Iteration 22450, loss = 0.00815477
+I1105 19:55:27.907786 13435 solver.cpp:592] Iteration 22450, lr = 0.001
+I1105 19:55:28.899911 13435 solver.cpp:243] Iteration 22455, loss = 0.00650083
+I1105 19:55:28.899938 13435 solver.cpp:592] Iteration 22455, lr = 0.001
+I1105 19:55:29.901927 13435 solver.cpp:243] Iteration 22460, loss = 0.0091167
+I1105 19:55:29.901954 13435 solver.cpp:592] Iteration 22460, lr = 0.001
+E1105 19:55:30.627780 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110710.batch : 1
+E1105 19:55:30.635512 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100806.batch : 2
+I1105 19:55:30.919816 13435 solver.cpp:243] Iteration 22465, loss = 0.00839296
+I1105 19:55:30.919854 13435 solver.cpp:592] Iteration 22465, lr = 0.001
+I1105 19:55:31.904053 13435 solver.cpp:243] Iteration 22470, loss = 0.0138402
+I1105 19:55:31.904083 13435 solver.cpp:592] Iteration 22470, lr = 0.001
+I1105 19:55:32.902048 13435 solver.cpp:243] Iteration 22475, loss = 0.0182346
+I1105 19:55:32.902076 13435 solver.cpp:592] Iteration 22475, lr = 0.001
+I1105 19:55:33.896320 13435 solver.cpp:243] Iteration 22480, loss = 0.0166289
+I1105 19:55:33.896358 13435 solver.cpp:592] Iteration 22480, lr = 0.001
+I1105 19:55:34.894613 13435 solver.cpp:243] Iteration 22485, loss = 0.0146088
+I1105 19:55:34.894649 13435 solver.cpp:592] Iteration 22485, lr = 0.001
+I1105 19:55:35.894718 13435 solver.cpp:243] Iteration 22490, loss = 0.0118113
+I1105 19:55:35.894745 13435 solver.cpp:592] Iteration 22490, lr = 0.001
+I1105 19:55:36.889354 13435 solver.cpp:243] Iteration 22495, loss = 0.0157587
+I1105 19:55:36.889391 13435 solver.cpp:592] Iteration 22495, lr = 0.001
+I1105 19:55:37.888345 13435 solver.cpp:243] Iteration 22500, loss = 0.0152684
+I1105 19:55:37.888381 13435 solver.cpp:592] Iteration 22500, lr = 0.001
+I1105 19:55:38.884297 13435 solver.cpp:243] Iteration 22505, loss = 0.0140138
+I1105 19:55:38.884332 13435 solver.cpp:592] Iteration 22505, lr = 0.001
+I1105 19:55:39.886468 13435 solver.cpp:243] Iteration 22510, loss = 0.0167463
+I1105 19:55:39.886494 13435 solver.cpp:592] Iteration 22510, lr = 0.001
+I1105 19:55:40.881683 13435 solver.cpp:243] Iteration 22515, loss = 0.0148935
+I1105 19:55:40.881719 13435 solver.cpp:592] Iteration 22515, lr = 0.001
+I1105 19:55:41.883998 13435 solver.cpp:243] Iteration 22520, loss = 0.0153055
+I1105 19:55:41.884026 13435 solver.cpp:592] Iteration 22520, lr = 0.001
+I1105 19:55:42.881853 13435 solver.cpp:243] Iteration 22525, loss = 0.0144692
+I1105 19:55:42.881889 13435 solver.cpp:592] Iteration 22525, lr = 0.001
+I1105 19:55:43.874435 13435 solver.cpp:243] Iteration 22530, loss = 0.0126554
+I1105 19:55:43.874470 13435 solver.cpp:592] Iteration 22530, lr = 0.001
+E1105 19:55:44.368196 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110720.batch : 3
+E1105 19:55:44.372619 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100829.batch : 4
+I1105 19:55:44.896381 13435 solver.cpp:243] Iteration 22535, loss = 0.0140525
+I1105 19:55:44.896416 13435 solver.cpp:592] Iteration 22535, lr = 0.001
+I1105 19:55:45.873041 13435 solver.cpp:243] Iteration 22540, loss = 0.0112043
+I1105 19:55:45.873077 13435 solver.cpp:592] Iteration 22540, lr = 0.001
+I1105 19:55:46.876710 13435 solver.cpp:243] Iteration 22545, loss = 0.00963708
+I1105 19:55:46.876767 13435 solver.cpp:592] Iteration 22545, lr = 0.001
+I1105 19:55:47.875511 13435 solver.cpp:243] Iteration 22550, loss = 0.00921754
+I1105 19:55:47.875546 13435 solver.cpp:592] Iteration 22550, lr = 0.001
+I1105 19:55:48.872550 13435 solver.cpp:243] Iteration 22555, loss = 0.00899236
+I1105 19:55:48.872586 13435 solver.cpp:592] Iteration 22555, lr = 0.001
+I1105 19:55:49.870023 13435 solver.cpp:243] Iteration 22560, loss = 0.0105998
+I1105 19:55:49.870057 13435 solver.cpp:592] Iteration 22560, lr = 0.001
+E1105 19:55:50.131940 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100822.batch : 5
+E1105 19:55:50.153859 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100929.batch : 6
+I1105 19:55:50.888526 13435 solver.cpp:243] Iteration 22565, loss = 0.0105685
+I1105 19:55:50.888563 13435 solver.cpp:592] Iteration 22565, lr = 0.001
+I1105 19:55:51.869562 13435 solver.cpp:243] Iteration 22570, loss = 0.0112564
+I1105 19:55:51.869590 13435 solver.cpp:592] Iteration 22570, lr = 0.001
+I1105 19:55:52.873677 13435 solver.cpp:243] Iteration 22575, loss = 0.00942643
+I1105 19:55:52.873708 13435 solver.cpp:592] Iteration 22575, lr = 0.001
+I1105 19:55:53.871477 13435 solver.cpp:243] Iteration 22580, loss = 0.0101869
+I1105 19:55:53.871603 13435 solver.cpp:592] Iteration 22580, lr = 0.001
+I1105 19:55:54.874511 13435 solver.cpp:243] Iteration 22585, loss = 0.00808661
+I1105 19:55:54.874537 13435 solver.cpp:592] Iteration 22585, lr = 0.001
+I1105 19:55:55.831449 13435 solver.cpp:243] Iteration 22590, loss = 0.00654142
+I1105 19:55:55.831475 13435 solver.cpp:592] Iteration 22590, lr = 0.001
+I1105 19:55:56.833425 13435 solver.cpp:243] Iteration 22595, loss = 0.00861521
+I1105 19:55:56.833452 13435 solver.cpp:592] Iteration 22595, lr = 0.001
+I1105 19:55:57.831624 13435 solver.cpp:243] Iteration 22600, loss = 0.00959656
+I1105 19:55:57.831650 13435 solver.cpp:592] Iteration 22600, lr = 0.001
+I1105 19:55:58.868297 13435 solver.cpp:243] Iteration 22605, loss = 0.00896701
+I1105 19:55:58.868324 13435 solver.cpp:592] Iteration 22605, lr = 0.001
+I1105 19:55:59.834475 13435 solver.cpp:243] Iteration 22610, loss = 0.00943593
+I1105 19:55:59.834503 13435 solver.cpp:592] Iteration 22610, lr = 0.001
+I1105 19:56:00.825358 13435 solver.cpp:243] Iteration 22615, loss = 0.00948672
+I1105 19:56:00.825389 13435 solver.cpp:592] Iteration 22615, lr = 0.001
+I1105 19:56:01.835898 13435 solver.cpp:243] Iteration 22620, loss = 0.00843771
+I1105 19:56:01.835928 13435 solver.cpp:592] Iteration 22620, lr = 0.001
+I1105 19:56:02.875458 13435 solver.cpp:243] Iteration 22625, loss = 0.00732396
+I1105 19:56:02.875484 13435 solver.cpp:592] Iteration 22625, lr = 0.001
+I1105 19:56:03.830024 13435 solver.cpp:243] Iteration 22630, loss = 0.00875093
+I1105 19:56:03.830054 13435 solver.cpp:592] Iteration 22630, lr = 0.001
+I1105 19:56:04.877337 13435 solver.cpp:243] Iteration 22635, loss = 0.00767379
+I1105 19:56:04.877365 13435 solver.cpp:592] Iteration 22635, lr = 0.001
+I1105 19:56:05.873615 13435 solver.cpp:243] Iteration 22640, loss = 0.00673599
+I1105 19:56:05.873641 13435 solver.cpp:592] Iteration 22640, lr = 0.001
+I1105 19:56:06.828416 13435 solver.cpp:243] Iteration 22645, loss = 0.00669716
+I1105 19:56:06.828443 13435 solver.cpp:592] Iteration 22645, lr = 0.001
+I1105 19:56:07.868188 13435 solver.cpp:243] Iteration 22650, loss = 0.00885484
+I1105 19:56:07.868214 13435 solver.cpp:592] Iteration 22650, lr = 0.001
+I1105 19:56:08.864825 13435 solver.cpp:243] Iteration 22655, loss = 0.00782489
+I1105 19:56:08.864853 13435 solver.cpp:592] Iteration 22655, lr = 0.001
+I1105 19:56:09.863497 13435 solver.cpp:243] Iteration 22660, loss = 0.00844601
+I1105 19:56:09.863523 13435 solver.cpp:592] Iteration 22660, lr = 0.001
+I1105 19:56:10.854658 13435 solver.cpp:243] Iteration 22665, loss = 0.0077232
+I1105 19:56:10.854686 13435 solver.cpp:592] Iteration 22665, lr = 0.001
+I1105 19:56:11.858511 13435 solver.cpp:243] Iteration 22670, loss = 0.00890758
+I1105 19:56:11.858538 13435 solver.cpp:592] Iteration 22670, lr = 0.001
+I1105 19:56:12.814335 13435 solver.cpp:243] Iteration 22675, loss = 0.00757089
+I1105 19:56:12.814364 13435 solver.cpp:592] Iteration 22675, lr = 0.001
+I1105 19:56:13.819074 13435 solver.cpp:243] Iteration 22680, loss = 0.00950759
+I1105 19:56:13.819104 13435 solver.cpp:592] Iteration 22680, lr = 0.001
+I1105 19:56:14.821817 13435 solver.cpp:243] Iteration 22685, loss = 0.00717139
+I1105 19:56:14.821844 13435 solver.cpp:592] Iteration 22685, lr = 0.001
+I1105 19:56:15.857851 13435 solver.cpp:243] Iteration 22690, loss = 0.00782494
+I1105 19:56:15.857877 13435 solver.cpp:592] Iteration 22690, lr = 0.001
+E1105 19:56:16.018918 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100909.batch : 7
+E1105 19:56:16.027601 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101008.batch : 8
+I1105 19:56:16.865558 13435 solver.cpp:243] Iteration 22695, loss = 0.00799237
+I1105 19:56:16.865584 13435 solver.cpp:592] Iteration 22695, lr = 0.001
+I1105 19:56:17.859786 13435 solver.cpp:243] Iteration 22700, loss = 0.00650468
+I1105 19:56:17.859812 13435 solver.cpp:592] Iteration 22700, lr = 0.001
+I1105 19:56:18.857692 13435 solver.cpp:243] Iteration 22705, loss = 0.00574457
+I1105 19:56:18.857718 13435 solver.cpp:592] Iteration 22705, lr = 0.001
+I1105 19:56:19.862303 13435 solver.cpp:243] Iteration 22710, loss = 0.00571872
+I1105 19:56:19.862331 13435 solver.cpp:592] Iteration 22710, lr = 0.001
+I1105 19:56:20.860805 13435 solver.cpp:243] Iteration 22715, loss = 0.00555936
+I1105 19:56:20.860831 13435 solver.cpp:592] Iteration 22715, lr = 0.001
+I1105 19:56:21.860100 13435 solver.cpp:243] Iteration 22720, loss = 0.00527596
+I1105 19:56:21.860126 13435 solver.cpp:592] Iteration 22720, lr = 0.001
+I1105 19:56:22.855293 13435 solver.cpp:243] Iteration 22725, loss = 0.00432698
+I1105 19:56:22.855319 13435 solver.cpp:592] Iteration 22725, lr = 0.001
+I1105 19:56:23.853780 13435 solver.cpp:243] Iteration 22730, loss = 0.00440933
+I1105 19:56:23.853804 13435 solver.cpp:592] Iteration 22730, lr = 0.001
+E1105 19:56:24.333428 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110709.batch : 9
+E1105 19:56:24.334318 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101003.batch : 10
+I1105 19:56:24.873801 13435 solver.cpp:243] Iteration 22735, loss = 0.00390198
+I1105 19:56:24.873826 13435 solver.cpp:592] Iteration 22735, lr = 0.001
+I1105 19:56:25.855892 13435 solver.cpp:243] Iteration 22740, loss = 0.020362
+I1105 19:56:25.855918 13435 solver.cpp:592] Iteration 22740, lr = 0.001
+I1105 19:56:26.857120 13435 solver.cpp:243] Iteration 22745, loss = 0.0205801
+I1105 19:56:26.857146 13435 solver.cpp:592] Iteration 22745, lr = 0.001
+I1105 19:56:27.851086 13435 solver.cpp:243] Iteration 22750, loss = 0.0128041
+I1105 19:56:27.851111 13435 solver.cpp:592] Iteration 22750, lr = 0.001
+I1105 19:56:28.848620 13435 solver.cpp:243] Iteration 22755, loss = 0.00931065
+I1105 19:56:28.848645 13435 solver.cpp:592] Iteration 22755, lr = 0.001
+I1105 19:56:29.845396 13435 solver.cpp:243] Iteration 22760, loss = 0.011883
+I1105 19:56:29.845430 13435 solver.cpp:592] Iteration 22760, lr = 0.001
+I1105 19:56:30.845657 13435 solver.cpp:243] Iteration 22765, loss = 0.0106016
+I1105 19:56:30.845695 13435 solver.cpp:592] Iteration 22765, lr = 0.001
+I1105 19:56:31.840204 13435 solver.cpp:243] Iteration 22770, loss = 0.0105455
+I1105 19:56:31.840234 13435 solver.cpp:592] Iteration 22770, lr = 0.001
+I1105 19:56:32.838366 13435 solver.cpp:243] Iteration 22775, loss = 0.00968931
+I1105 19:56:32.838403 13435 solver.cpp:592] Iteration 22775, lr = 0.001
+E1105 19:56:33.470238 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110725.batch : 11
+E1105 19:56:33.494870 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101006.batch : 12
+I1105 19:56:33.856325 13435 solver.cpp:243] Iteration 22780, loss = 0.00995866
+I1105 19:56:33.856364 13435 solver.cpp:592] Iteration 22780, lr = 0.001
+I1105 19:56:34.835628 13435 solver.cpp:243] Iteration 22785, loss = 0.010259
+I1105 19:56:34.835664 13435 solver.cpp:592] Iteration 22785, lr = 0.001
+I1105 19:56:35.841572 13435 solver.cpp:243] Iteration 22790, loss = 0.0118275
+I1105 19:56:35.841608 13435 solver.cpp:592] Iteration 22790, lr = 0.001
+I1105 19:56:36.839910 13435 solver.cpp:243] Iteration 22795, loss = 0.00834264
+I1105 19:56:36.839946 13435 solver.cpp:592] Iteration 22795, lr = 0.001
+I1105 19:56:37.837276 13435 solver.cpp:243] Iteration 22800, loss = 0.00667712
+I1105 19:56:37.837311 13435 solver.cpp:592] Iteration 22800, lr = 0.001
+I1105 19:56:38.791054 13435 solver.cpp:243] Iteration 22805, loss = 0.0066042
+I1105 19:56:38.791082 13435 solver.cpp:592] Iteration 22805, lr = 0.001
+I1105 19:56:39.828577 13435 solver.cpp:243] Iteration 22810, loss = 0.00694922
+I1105 19:56:39.828605 13435 solver.cpp:592] Iteration 22810, lr = 0.001
+I1105 19:56:40.785956 13435 solver.cpp:243] Iteration 22815, loss = 0.00715671
+I1105 19:56:40.785996 13435 solver.cpp:592] Iteration 22815, lr = 0.001
+I1105 19:56:41.832070 13435 solver.cpp:243] Iteration 22820, loss = 0.00715864
+I1105 19:56:41.832108 13435 solver.cpp:592] Iteration 22820, lr = 0.001
+I1105 19:56:42.787492 13435 solver.cpp:243] Iteration 22825, loss = 0.00637916
+I1105 19:56:42.787518 13435 solver.cpp:592] Iteration 22825, lr = 0.001
+I1105 19:56:43.827282 13435 solver.cpp:243] Iteration 22830, loss = 0.00703335
+I1105 19:56:43.827311 13435 solver.cpp:592] Iteration 22830, lr = 0.001
+I1105 19:56:44.830263 13435 solver.cpp:243] Iteration 22835, loss = 0.00695419
+I1105 19:56:44.830289 13435 solver.cpp:592] Iteration 22835, lr = 0.001
+I1105 19:56:45.821408 13435 solver.cpp:243] Iteration 22840, loss = 0.00906545
+I1105 19:56:45.821434 13435 solver.cpp:592] Iteration 22840, lr = 0.001
+I1105 19:56:46.822723 13435 solver.cpp:243] Iteration 22845, loss = 0.00551959
+I1105 19:56:46.822754 13435 solver.cpp:592] Iteration 22845, lr = 0.001
+I1105 19:56:47.780658 13435 solver.cpp:243] Iteration 22850, loss = 0.00588967
+I1105 19:56:47.780697 13435 solver.cpp:592] Iteration 22850, lr = 0.001
+I1105 19:56:48.824800 13435 solver.cpp:243] Iteration 22855, loss = 0.00671871
+I1105 19:56:48.824852 13435 solver.cpp:592] Iteration 22855, lr = 0.001
+I1105 19:56:49.816181 13435 solver.cpp:243] Iteration 22860, loss = 0.00706299
+I1105 19:56:49.816216 13435 solver.cpp:592] Iteration 22860, lr = 0.001
+I1105 19:56:50.820237 13435 solver.cpp:243] Iteration 22865, loss = 0.00639255
+I1105 19:56:50.820263 13435 solver.cpp:592] Iteration 22865, lr = 0.001
+I1105 19:56:51.817332 13435 solver.cpp:243] Iteration 22870, loss = 0.0054936
+I1105 19:56:51.817360 13435 solver.cpp:592] Iteration 22870, lr = 0.001
+I1105 19:56:52.812423 13435 solver.cpp:243] Iteration 22875, loss = 0.00744603
+I1105 19:56:52.812458 13435 solver.cpp:592] Iteration 22875, lr = 0.001
+I1105 19:56:53.812317 13435 solver.cpp:243] Iteration 22880, loss = 0.00488573
+I1105 19:56:53.812345 13435 solver.cpp:592] Iteration 22880, lr = 0.001
+I1105 19:56:54.807236 13435 solver.cpp:243] Iteration 22885, loss = 0.00694438
+I1105 19:56:54.807324 13435 solver.cpp:592] Iteration 22885, lr = 0.001
+I1105 19:56:55.805524 13435 solver.cpp:243] Iteration 22890, loss = 0.00584246
+I1105 19:56:55.805551 13435 solver.cpp:592] Iteration 22890, lr = 0.001
+I1105 19:56:56.770683 13435 solver.cpp:243] Iteration 22895, loss = 0.00809374
+I1105 19:56:56.770709 13435 solver.cpp:592] Iteration 22895, lr = 0.001
+I1105 19:56:57.809028 13435 solver.cpp:243] Iteration 22900, loss = 0.00714838
+I1105 19:56:57.809056 13435 solver.cpp:592] Iteration 22900, lr = 0.001
+I1105 19:56:58.805661 13435 solver.cpp:243] Iteration 22905, loss = 0.00728814
+I1105 19:56:58.805694 13435 solver.cpp:592] Iteration 22905, lr = 0.001
+I1105 19:56:59.765483 13435 solver.cpp:243] Iteration 22910, loss = 0.00684439
+I1105 19:56:59.765521 13435 solver.cpp:592] Iteration 22910, lr = 0.001
+I1105 19:57:00.806869 13435 solver.cpp:243] Iteration 22915, loss = 0.00768809
+I1105 19:57:00.806905 13435 solver.cpp:592] Iteration 22915, lr = 0.001
+I1105 19:57:01.798574 13435 solver.cpp:243] Iteration 22920, loss = 0.00501628
+I1105 19:57:01.798601 13435 solver.cpp:592] Iteration 22920, lr = 0.001
+E1105 19:57:02.159720 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100929.batch : 0
+E1105 19:57:02.175712 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100730.batch : 1
+I1105 19:57:02.794458 13435 solver.cpp:243] Iteration 22925, loss = 0.00663233
+I1105 19:57:02.794495 13435 solver.cpp:592] Iteration 22925, lr = 0.001
+I1105 19:57:03.798791 13435 solver.cpp:243] Iteration 22930, loss = 0.0222358
+I1105 19:57:03.798828 13435 solver.cpp:592] Iteration 22930, lr = 0.001
+I1105 19:57:04.798321 13435 solver.cpp:243] Iteration 22935, loss = 0.0129288
+I1105 19:57:04.798346 13435 solver.cpp:592] Iteration 22935, lr = 0.001
+I1105 19:57:05.795646 13435 solver.cpp:243] Iteration 22940, loss = 0.0131899
+I1105 19:57:05.795682 13435 solver.cpp:592] Iteration 22940, lr = 0.001
+I1105 19:57:06.791564 13435 solver.cpp:243] Iteration 22945, loss = 0.0105008
+I1105 19:57:06.791600 13435 solver.cpp:592] Iteration 22945, lr = 0.001
+I1105 19:57:07.787111 13435 solver.cpp:243] Iteration 22950, loss = 0.0110007
+I1105 19:57:07.787147 13435 solver.cpp:592] Iteration 22950, lr = 0.001
+I1105 19:57:08.787741 13435 solver.cpp:243] Iteration 22955, loss = 0.0096419
+I1105 19:57:08.787770 13435 solver.cpp:592] Iteration 22955, lr = 0.001
+I1105 19:57:09.784282 13435 solver.cpp:243] Iteration 22960, loss = 0.00984979
+I1105 19:57:09.784307 13435 solver.cpp:592] Iteration 22960, lr = 0.001
+I1105 19:57:10.783701 13435 solver.cpp:243] Iteration 22965, loss = 0.00926761
+I1105 19:57:10.783730 13435 solver.cpp:592] Iteration 22965, lr = 0.001
+I1105 19:57:11.772557 13435 solver.cpp:243] Iteration 22970, loss = 0.00918719
+I1105 19:57:11.772585 13435 solver.cpp:592] Iteration 22970, lr = 0.001
+I1105 19:57:12.775522 13435 solver.cpp:243] Iteration 22975, loss = 0.00925451
+I1105 19:57:12.775548 13435 solver.cpp:592] Iteration 22975, lr = 0.001
+I1105 19:57:13.774327 13435 solver.cpp:243] Iteration 22980, loss = 0.00908998
+I1105 19:57:13.774353 13435 solver.cpp:592] Iteration 22980, lr = 0.001
+E1105 19:57:14.013474 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110720.batch : 2
+E1105 19:57:14.017206 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110709.batch : 3
+I1105 19:57:14.769927 13435 solver.cpp:243] Iteration 22985, loss = 0.0103862
+I1105 19:57:14.769953 13435 solver.cpp:592] Iteration 22985, lr = 0.001
+I1105 19:57:15.771257 13435 solver.cpp:243] Iteration 22990, loss = 0.0260484
+I1105 19:57:15.771283 13435 solver.cpp:592] Iteration 22990, lr = 0.001
+I1105 19:57:16.723280 13435 solver.cpp:243] Iteration 22995, loss = 0.0279602
+I1105 19:57:16.723314 13435 solver.cpp:592] Iteration 22995, lr = 0.001
+E1105 19:57:17.447988 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100806.batch : 4
+E1105 19:57:17.462276 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110710.batch : 5
+I1105 19:57:17.591819 13435 solver.cpp:349] Iteration 23000, Testing net (#0)
+I1105 19:57:17.591836 13435 net.cpp:781] Copying source layer data
+I1105 19:57:17.591841 13435 net.cpp:781] Copying source layer conv1
+I1105 19:57:17.591848 13435 net.cpp:781] Copying source layer relu1
+I1105 19:57:17.591851 13435 net.cpp:781] Copying source layer pool1
+I1105 19:57:17.591855 13435 net.cpp:781] Copying source layer conv2
+I1105 19:57:17.591857 13435 net.cpp:781] Copying source layer relu2
+I1105 19:57:17.591861 13435 net.cpp:781] Copying source layer pool2
+I1105 19:57:17.591863 13435 net.cpp:781] Copying source layer conv3
+I1105 19:57:17.591866 13435 net.cpp:781] Copying source layer relu3
+I1105 19:57:17.591869 13435 net.cpp:781] Copying source layer fc4
+I1105 19:57:17.591873 13435 net.cpp:781] Copying source layer relu4
+I1105 19:57:17.591876 13435 net.cpp:781] Copying source layer fc5
+I1105 19:57:17.591878 13435 net.cpp:781] Copying source layer loss
+E1105 19:57:21.946580 13449 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110811.batch : 0
+E1105 19:57:21.983656 13449 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110811.batch : 0
+E1105 19:57:21.997515 13435 solver.cpp:417]     Test net output #0: loss = 0.0180574 (* 1 = 0.0180574 loss)
+I1105 19:57:22.203349 13435 solver.cpp:243] Iteration 23000, loss = 0.0200822
+I1105 19:57:22.203390 13435 solver.cpp:592] Iteration 23000, lr = 0.001
+I1105 19:57:23.201719 13435 solver.cpp:243] Iteration 23005, loss = 0.018381
+I1105 19:57:23.201742 13435 solver.cpp:592] Iteration 23005, lr = 0.001
+I1105 19:57:24.205096 13435 solver.cpp:243] Iteration 23010, loss = 0.0148868
+I1105 19:57:24.205121 13435 solver.cpp:592] Iteration 23010, lr = 0.001
+I1105 19:57:25.210562 13435 solver.cpp:243] Iteration 23015, loss = 0.0152184
+I1105 19:57:25.210686 13435 solver.cpp:592] Iteration 23015, lr = 0.001
+I1105 19:57:26.216056 13435 solver.cpp:243] Iteration 23020, loss = 0.0134482
+I1105 19:57:26.216081 13435 solver.cpp:592] Iteration 23020, lr = 0.001
+I1105 19:57:27.220582 13435 solver.cpp:243] Iteration 23025, loss = 0.0173624
+I1105 19:57:27.220607 13435 solver.cpp:592] Iteration 23025, lr = 0.001
+I1105 19:57:28.225975 13435 solver.cpp:243] Iteration 23030, loss = 0.0148239
+I1105 19:57:28.225997 13435 solver.cpp:592] Iteration 23030, lr = 0.001
+I1105 19:57:29.229395 13435 solver.cpp:243] Iteration 23035, loss = 0.0142783
+I1105 19:57:29.229420 13435 solver.cpp:592] Iteration 23035, lr = 0.001
+I1105 19:57:30.219226 13435 solver.cpp:243] Iteration 23040, loss = 0.0155452
+I1105 19:57:30.219252 13435 solver.cpp:592] Iteration 23040, lr = 0.001
+I1105 19:57:31.222210 13435 solver.cpp:243] Iteration 23045, loss = 0.0141133
+I1105 19:57:31.222239 13435 solver.cpp:592] Iteration 23045, lr = 0.001
+I1105 19:57:32.217373 13435 solver.cpp:243] Iteration 23050, loss = 0.0157287
+I1105 19:57:32.217411 13435 solver.cpp:592] Iteration 23050, lr = 0.001
+I1105 19:57:33.215870 13435 solver.cpp:243] Iteration 23055, loss = 0.0167455
+I1105 19:57:33.215906 13435 solver.cpp:592] Iteration 23055, lr = 0.001
+I1105 19:57:34.212061 13435 solver.cpp:243] Iteration 23060, loss = 0.0146781
+I1105 19:57:34.212087 13435 solver.cpp:592] Iteration 23060, lr = 0.001
+I1105 19:57:35.206951 13435 solver.cpp:243] Iteration 23065, loss = 0.0126359
+I1105 19:57:35.206977 13435 solver.cpp:592] Iteration 23065, lr = 0.001
+E1105 19:57:35.651331 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110725.batch : 6
+E1105 19:57:35.675673 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100909.batch : 7
+I1105 19:57:36.208382 13435 solver.cpp:243] Iteration 23070, loss = 0.01366
+I1105 19:57:36.208410 13435 solver.cpp:592] Iteration 23070, lr = 0.001
+I1105 19:57:37.211349 13435 solver.cpp:243] Iteration 23075, loss = 0.00596336
+I1105 19:57:37.211375 13435 solver.cpp:592] Iteration 23075, lr = 0.001
+I1105 19:57:38.208570 13435 solver.cpp:243] Iteration 23080, loss = 0.00418463
+I1105 19:57:38.208596 13435 solver.cpp:592] Iteration 23080, lr = 0.001
+I1105 19:57:39.210088 13435 solver.cpp:243] Iteration 23085, loss = 0.0040014
+I1105 19:57:39.210114 13435 solver.cpp:592] Iteration 23085, lr = 0.001
+I1105 19:57:40.205399 13435 solver.cpp:243] Iteration 23090, loss = 0.00509563
+I1105 19:57:40.205425 13435 solver.cpp:592] Iteration 23090, lr = 0.001
+I1105 19:57:41.204743 13435 solver.cpp:243] Iteration 23095, loss = 0.00448744
+I1105 19:57:41.204771 13435 solver.cpp:592] Iteration 23095, lr = 0.001
+I1105 19:57:42.201632 13435 solver.cpp:243] Iteration 23100, loss = 0.00431828
+I1105 19:57:42.201659 13435 solver.cpp:592] Iteration 23100, lr = 0.001
+I1105 19:57:43.125162 13435 solver.cpp:243] Iteration 23105, loss = 0.00404493
+I1105 19:57:43.125196 13435 solver.cpp:592] Iteration 23105, lr = 0.001
+I1105 19:57:44.197013 13435 solver.cpp:243] Iteration 23110, loss = 0.00395241
+I1105 19:57:44.197041 13435 solver.cpp:592] Iteration 23110, lr = 0.001
+I1105 19:57:45.200916 13435 solver.cpp:243] Iteration 23115, loss = 0.00425761
+I1105 19:57:45.200943 13435 solver.cpp:592] Iteration 23115, lr = 0.001
+I1105 19:57:46.197940 13435 solver.cpp:243] Iteration 23120, loss = 0.00420098
+I1105 19:57:46.197968 13435 solver.cpp:592] Iteration 23120, lr = 0.001
+I1105 19:57:47.194845 13435 solver.cpp:243] Iteration 23125, loss = 0.00372771
+I1105 19:57:47.194871 13435 solver.cpp:592] Iteration 23125, lr = 0.001
+I1105 19:57:48.192044 13435 solver.cpp:243] Iteration 23130, loss = 0.00344349
+I1105 19:57:48.192070 13435 solver.cpp:592] Iteration 23130, lr = 0.001
+I1105 19:57:49.184260 13435 solver.cpp:243] Iteration 23135, loss = 0.00395521
+I1105 19:57:49.184289 13435 solver.cpp:592] Iteration 23135, lr = 0.001
+I1105 19:57:50.182920 13435 solver.cpp:243] Iteration 23140, loss = 0.00363312
+I1105 19:57:50.182945 13435 solver.cpp:592] Iteration 23140, lr = 0.001
+I1105 19:57:51.177104 13435 solver.cpp:243] Iteration 23145, loss = 0.00325523
+I1105 19:57:51.177130 13435 solver.cpp:592] Iteration 23145, lr = 0.001
+I1105 19:57:52.177180 13435 solver.cpp:243] Iteration 23150, loss = 0.00299337
+I1105 19:57:52.177207 13435 solver.cpp:592] Iteration 23150, lr = 0.001
+I1105 19:57:53.175524 13435 solver.cpp:243] Iteration 23155, loss = 0.0035096
+I1105 19:57:53.175551 13435 solver.cpp:592] Iteration 23155, lr = 0.001
+I1105 19:57:54.173189 13435 solver.cpp:243] Iteration 23160, loss = 0.00371057
+I1105 19:57:54.173216 13435 solver.cpp:592] Iteration 23160, lr = 0.001
+I1105 19:57:55.165482 13435 solver.cpp:243] Iteration 23165, loss = 0.00479403
+I1105 19:57:55.165510 13435 solver.cpp:592] Iteration 23165, lr = 0.001
+I1105 19:57:56.165814 13435 solver.cpp:243] Iteration 23170, loss = 0.00388918
+I1105 19:57:56.165880 13435 solver.cpp:592] Iteration 23170, lr = 0.001
+I1105 19:57:57.164206 13435 solver.cpp:243] Iteration 23175, loss = 0.00380806
+I1105 19:57:57.164235 13435 solver.cpp:592] Iteration 23175, lr = 0.001
+I1105 19:57:58.156936 13435 solver.cpp:243] Iteration 23180, loss = 0.00362914
+I1105 19:57:58.156965 13435 solver.cpp:592] Iteration 23180, lr = 0.001
+E1105 19:57:58.499441 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100822.batch : 8
+E1105 19:57:58.523916 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100829.batch : 9
+I1105 19:57:59.166743 13435 solver.cpp:243] Iteration 23185, loss = 0.00391486
+I1105 19:57:59.166770 13435 solver.cpp:592] Iteration 23185, lr = 0.001
+I1105 19:58:00.120990 13435 solver.cpp:243] Iteration 23190, loss = 0.00725822
+I1105 19:58:00.121017 13435 solver.cpp:592] Iteration 23190, lr = 0.001
+I1105 19:58:01.155218 13435 solver.cpp:243] Iteration 23195, loss = 0.00826474
+I1105 19:58:01.155246 13435 solver.cpp:592] Iteration 23195, lr = 0.001
+I1105 19:58:02.158531 13435 solver.cpp:243] Iteration 23200, loss = 0.00609751
+I1105 19:58:02.158557 13435 solver.cpp:592] Iteration 23200, lr = 0.001
+I1105 19:58:03.155203 13435 solver.cpp:243] Iteration 23205, loss = 0.00573406
+I1105 19:58:03.155230 13435 solver.cpp:592] Iteration 23205, lr = 0.001
+I1105 19:58:04.156847 13435 solver.cpp:243] Iteration 23210, loss = 0.00476218
+I1105 19:58:04.156873 13435 solver.cpp:592] Iteration 23210, lr = 0.001
+I1105 19:58:05.156414 13435 solver.cpp:243] Iteration 23215, loss = 0.00587459
+I1105 19:58:05.156440 13435 solver.cpp:592] Iteration 23215, lr = 0.001
+I1105 19:58:06.111058 13435 solver.cpp:243] Iteration 23220, loss = 0.00472055
+I1105 19:58:06.111085 13435 solver.cpp:592] Iteration 23220, lr = 0.001
+I1105 19:58:07.109160 13435 solver.cpp:243] Iteration 23225, loss = 0.00565591
+I1105 19:58:07.109189 13435 solver.cpp:592] Iteration 23225, lr = 0.001
+I1105 19:58:08.107944 13435 solver.cpp:243] Iteration 23230, loss = 0.00433888
+I1105 19:58:08.107972 13435 solver.cpp:592] Iteration 23230, lr = 0.001
+I1105 19:58:09.148932 13435 solver.cpp:243] Iteration 23235, loss = 0.00503109
+I1105 19:58:09.148960 13435 solver.cpp:592] Iteration 23235, lr = 0.001
+I1105 19:58:10.106124 13435 solver.cpp:243] Iteration 23240, loss = 0.00540518
+I1105 19:58:10.106153 13435 solver.cpp:592] Iteration 23240, lr = 0.001
+I1105 19:58:11.144876 13435 solver.cpp:243] Iteration 23245, loss = 0.00481462
+I1105 19:58:11.144904 13435 solver.cpp:592] Iteration 23245, lr = 0.001
+I1105 19:58:12.140040 13435 solver.cpp:243] Iteration 23250, loss = 0.00526041
+I1105 19:58:12.140069 13435 solver.cpp:592] Iteration 23250, lr = 0.001
+I1105 19:58:13.136374 13435 solver.cpp:243] Iteration 23255, loss = 0.00525551
+I1105 19:58:13.136401 13435 solver.cpp:592] Iteration 23255, lr = 0.001
+I1105 19:58:14.136126 13435 solver.cpp:243] Iteration 23260, loss = 0.00499162
+I1105 19:58:14.136155 13435 solver.cpp:592] Iteration 23260, lr = 0.001
+I1105 19:58:15.094298 13435 solver.cpp:243] Iteration 23265, loss = 0.00427656
+I1105 19:58:15.094331 13435 solver.cpp:592] Iteration 23265, lr = 0.001
+I1105 19:58:16.140123 13435 solver.cpp:243] Iteration 23270, loss = 0.00516087
+I1105 19:58:16.140151 13435 solver.cpp:592] Iteration 23270, lr = 0.001
+E1105 19:58:16.536336 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101003.batch : 10
+E1105 19:58:16.548418 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101006.batch : 11
+I1105 19:58:17.137418 13435 solver.cpp:243] Iteration 23275, loss = 0.00483441
+I1105 19:58:17.137446 13435 solver.cpp:592] Iteration 23275, lr = 0.001
+I1105 19:58:18.136917 13435 solver.cpp:243] Iteration 23280, loss = 0.0184397
+I1105 19:58:18.136945 13435 solver.cpp:592] Iteration 23280, lr = 0.001
+I1105 19:58:19.132905 13435 solver.cpp:243] Iteration 23285, loss = 0.0149868
+I1105 19:58:19.132931 13435 solver.cpp:592] Iteration 23285, lr = 0.001
+I1105 19:58:20.139245 13435 solver.cpp:243] Iteration 23290, loss = 0.0096917
+I1105 19:58:20.139292 13435 solver.cpp:592] Iteration 23290, lr = 0.001
+I1105 19:58:21.133793 13435 solver.cpp:243] Iteration 23295, loss = 0.00902707
+I1105 19:58:21.133822 13435 solver.cpp:592] Iteration 23295, lr = 0.001
+I1105 19:58:22.134829 13435 solver.cpp:243] Iteration 23300, loss = 0.00719123
+I1105 19:58:22.134858 13435 solver.cpp:592] Iteration 23300, lr = 0.001
+I1105 19:58:23.133291 13435 solver.cpp:243] Iteration 23305, loss = 0.00888698
+I1105 19:58:23.133317 13435 solver.cpp:592] Iteration 23305, lr = 0.001
+I1105 19:58:24.124488 13435 solver.cpp:243] Iteration 23310, loss = 0.00911981
+I1105 19:58:24.124514 13435 solver.cpp:592] Iteration 23310, lr = 0.001
+I1105 19:58:25.119031 13435 solver.cpp:243] Iteration 23315, loss = 0.00910717
+I1105 19:58:25.119057 13435 solver.cpp:592] Iteration 23315, lr = 0.001
+I1105 19:58:26.119493 13435 solver.cpp:243] Iteration 23320, loss = 0.00787586
+I1105 19:58:26.119518 13435 solver.cpp:592] Iteration 23320, lr = 0.001
+I1105 19:58:27.115213 13435 solver.cpp:243] Iteration 23325, loss = 0.00902383
+I1105 19:58:27.115303 13435 solver.cpp:592] Iteration 23325, lr = 0.001
+I1105 19:58:28.117584 13435 solver.cpp:243] Iteration 23330, loss = 0.00793265
+I1105 19:58:28.117610 13435 solver.cpp:592] Iteration 23330, lr = 0.001
+I1105 19:58:29.111857 13435 solver.cpp:243] Iteration 23335, loss = 0.00785823
+I1105 19:58:29.111884 13435 solver.cpp:592] Iteration 23335, lr = 0.001
+I1105 19:58:30.109442 13435 solver.cpp:243] Iteration 23340, loss = 0.00715566
+I1105 19:58:30.109469 13435 solver.cpp:592] Iteration 23340, lr = 0.001
+I1105 19:58:31.111887 13435 solver.cpp:243] Iteration 23345, loss = 0.00757245
+I1105 19:58:31.111923 13435 solver.cpp:592] Iteration 23345, lr = 0.001
+I1105 19:58:32.106991 13435 solver.cpp:243] Iteration 23350, loss = 0.00988195
+I1105 19:58:32.107028 13435 solver.cpp:592] Iteration 23350, lr = 0.001
+I1105 19:58:33.101922 13435 solver.cpp:243] Iteration 23355, loss = 0.00657209
+I1105 19:58:33.101950 13435 solver.cpp:592] Iteration 23355, lr = 0.001
+I1105 19:58:34.063132 13435 solver.cpp:243] Iteration 23360, loss = 0.00730538
+I1105 19:58:34.063169 13435 solver.cpp:592] Iteration 23360, lr = 0.001
+I1105 19:58:35.098094 13435 solver.cpp:243] Iteration 23365, loss = 0.00937466
+I1105 19:58:35.098131 13435 solver.cpp:592] Iteration 23365, lr = 0.001
+I1105 19:58:36.095813 13435 solver.cpp:243] Iteration 23370, loss = 0.0101807
+I1105 19:58:36.095842 13435 solver.cpp:592] Iteration 23370, lr = 0.001
+E1105 19:58:36.606197 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101008.batch : 12
+E1105 19:58:36.610196 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100829.batch : 0
+I1105 19:58:37.117322 13435 solver.cpp:243] Iteration 23375, loss = 0.00844962
+I1105 19:58:37.117360 13435 solver.cpp:592] Iteration 23375, lr = 0.001
+I1105 19:58:38.100162 13435 solver.cpp:243] Iteration 23380, loss = 0.0144267
+I1105 19:58:38.100189 13435 solver.cpp:592] Iteration 23380, lr = 0.001
+I1105 19:58:39.097019 13435 solver.cpp:243] Iteration 23385, loss = 0.0100204
+I1105 19:58:39.097046 13435 solver.cpp:592] Iteration 23385, lr = 0.001
+I1105 19:58:40.094511 13435 solver.cpp:243] Iteration 23390, loss = 0.00665667
+I1105 19:58:40.094537 13435 solver.cpp:592] Iteration 23390, lr = 0.001
+I1105 19:58:41.093686 13435 solver.cpp:243] Iteration 23395, loss = 0.00565342
+I1105 19:58:41.093713 13435 solver.cpp:592] Iteration 23395, lr = 0.001
+E1105 19:58:42.005834 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100822.batch : 1
+I1105 19:58:42.012663 13435 solver.cpp:243] Iteration 23400, loss = 0.0055071
+I1105 19:58:42.012734 13435 solver.cpp:592] Iteration 23400, lr = 0.001
+E1105 19:58:42.031044 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110709.batch : 2
+I1105 19:58:43.088680 13435 solver.cpp:243] Iteration 23405, loss = 0.00756763
+I1105 19:58:43.088709 13435 solver.cpp:592] Iteration 23405, lr = 0.001
+I1105 19:58:44.041028 13435 solver.cpp:243] Iteration 23410, loss = 0.00743347
+I1105 19:58:44.041062 13435 solver.cpp:592] Iteration 23410, lr = 0.001
+I1105 19:58:45.085418 13435 solver.cpp:243] Iteration 23415, loss = 0.00775699
+I1105 19:58:45.085446 13435 solver.cpp:592] Iteration 23415, lr = 0.001
+I1105 19:58:46.083959 13435 solver.cpp:243] Iteration 23420, loss = 0.00690809
+I1105 19:58:46.083987 13435 solver.cpp:592] Iteration 23420, lr = 0.001
+I1105 19:58:47.082162 13435 solver.cpp:243] Iteration 23425, loss = 0.0079034
+I1105 19:58:47.082191 13435 solver.cpp:592] Iteration 23425, lr = 0.001
+I1105 19:58:48.074532 13435 solver.cpp:243] Iteration 23430, loss = 0.0080323
+I1105 19:58:48.074560 13435 solver.cpp:592] Iteration 23430, lr = 0.001
+I1105 19:58:49.086933 13435 solver.cpp:243] Iteration 23435, loss = 0.00653745
+I1105 19:58:49.086962 13435 solver.cpp:592] Iteration 23435, lr = 0.001
+I1105 19:58:50.076545 13435 solver.cpp:243] Iteration 23440, loss = 0.00600567
+I1105 19:58:50.076573 13435 solver.cpp:592] Iteration 23440, lr = 0.001
+I1105 19:58:51.077054 13435 solver.cpp:243] Iteration 23445, loss = 0.0071014
+I1105 19:58:51.077103 13435 solver.cpp:592] Iteration 23445, lr = 0.001
+I1105 19:58:52.076951 13435 solver.cpp:243] Iteration 23450, loss = 0.00629202
+I1105 19:58:52.076979 13435 solver.cpp:592] Iteration 23450, lr = 0.001
+I1105 19:58:53.039059 13435 solver.cpp:243] Iteration 23455, loss = 0.0054108
+I1105 19:58:53.039089 13435 solver.cpp:592] Iteration 23455, lr = 0.001
+I1105 19:58:54.077414 13435 solver.cpp:243] Iteration 23460, loss = 0.00558991
+I1105 19:58:54.077440 13435 solver.cpp:592] Iteration 23460, lr = 0.001
+I1105 19:58:55.072963 13435 solver.cpp:243] Iteration 23465, loss = 0.00594976
+I1105 19:58:55.072993 13435 solver.cpp:592] Iteration 23465, lr = 0.001
+I1105 19:58:56.079515 13435 solver.cpp:243] Iteration 23470, loss = 0.00640569
+I1105 19:58:56.079545 13435 solver.cpp:592] Iteration 23470, lr = 0.001
+I1105 19:58:57.032632 13435 solver.cpp:243] Iteration 23475, loss = 0.00556992
+I1105 19:58:57.032663 13435 solver.cpp:592] Iteration 23475, lr = 0.001
+E1105 19:58:57.743078 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101006.batch : 3
+E1105 19:58:57.760124 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101003.batch : 4
+I1105 19:58:58.088593 13435 solver.cpp:243] Iteration 23480, loss = 0.00488213
+I1105 19:58:58.088621 13435 solver.cpp:592] Iteration 23480, lr = 0.001
+I1105 19:58:59.064054 13435 solver.cpp:243] Iteration 23485, loss = 0.0168427
+I1105 19:58:59.064081 13435 solver.cpp:592] Iteration 23485, lr = 0.001
+I1105 19:59:00.012877 13435 solver.cpp:243] Iteration 23490, loss = 0.0143248
+I1105 19:59:00.012935 13435 solver.cpp:592] Iteration 23490, lr = 0.001
+I1105 19:59:01.059198 13435 solver.cpp:243] Iteration 23495, loss = 0.00999156
+I1105 19:59:01.059226 13435 solver.cpp:592] Iteration 23495, lr = 0.001
+I1105 19:59:02.059762 13435 solver.cpp:243] Iteration 23500, loss = 0.00920815
+I1105 19:59:02.059789 13435 solver.cpp:592] Iteration 23500, lr = 0.001
+I1105 19:59:03.015955 13435 solver.cpp:243] Iteration 23505, loss = 0.00684605
+I1105 19:59:03.015983 13435 solver.cpp:592] Iteration 23505, lr = 0.001
+I1105 19:59:04.048280 13435 solver.cpp:243] Iteration 23510, loss = 0.00854479
+I1105 19:59:04.048307 13435 solver.cpp:592] Iteration 23510, lr = 0.001
+I1105 19:59:05.044284 13435 solver.cpp:243] Iteration 23515, loss = 0.00859277
+I1105 19:59:05.044311 13435 solver.cpp:592] Iteration 23515, lr = 0.001
+I1105 19:59:06.038776 13435 solver.cpp:243] Iteration 23520, loss = 0.0104657
+I1105 19:59:06.038805 13435 solver.cpp:592] Iteration 23520, lr = 0.001
+I1105 19:59:07.036854 13435 solver.cpp:243] Iteration 23525, loss = 0.00999902
+I1105 19:59:07.036880 13435 solver.cpp:592] Iteration 23525, lr = 0.001
+I1105 19:59:08.036775 13435 solver.cpp:243] Iteration 23530, loss = 0.00899696
+I1105 19:59:08.036803 13435 solver.cpp:592] Iteration 23530, lr = 0.001
+I1105 19:59:08.994185 13435 solver.cpp:243] Iteration 23535, loss = 0.00825938
+I1105 19:59:08.994212 13435 solver.cpp:592] Iteration 23535, lr = 0.001
+I1105 19:59:10.025755 13435 solver.cpp:243] Iteration 23540, loss = 0.00957503
+I1105 19:59:10.025782 13435 solver.cpp:592] Iteration 23540, lr = 0.001
+I1105 19:59:11.024438 13435 solver.cpp:243] Iteration 23545, loss = 0.00729319
+I1105 19:59:11.024466 13435 solver.cpp:592] Iteration 23545, lr = 0.001
+I1105 19:59:12.025163 13435 solver.cpp:243] Iteration 23550, loss = 0.00731006
+I1105 19:59:12.025188 13435 solver.cpp:592] Iteration 23550, lr = 0.001
+I1105 19:59:13.016886 13435 solver.cpp:243] Iteration 23555, loss = 0.00813809
+I1105 19:59:13.016913 13435 solver.cpp:592] Iteration 23555, lr = 0.001
+I1105 19:59:14.010774 13435 solver.cpp:243] Iteration 23560, loss = 0.00810231
+I1105 19:59:14.010802 13435 solver.cpp:592] Iteration 23560, lr = 0.001
+I1105 19:59:15.008299 13435 solver.cpp:243] Iteration 23565, loss = 0.00592578
+I1105 19:59:15.008327 13435 solver.cpp:592] Iteration 23565, lr = 0.001
+I1105 19:59:16.012413 13435 solver.cpp:243] Iteration 23570, loss = 0.00674085
+I1105 19:59:16.012439 13435 solver.cpp:592] Iteration 23570, lr = 0.001
+I1105 19:59:16.969615 13435 solver.cpp:243] Iteration 23575, loss = 0.00781053
+I1105 19:59:16.969646 13435 solver.cpp:592] Iteration 23575, lr = 0.001
+E1105 19:59:17.831168 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100730.batch : 5
+E1105 19:59:17.832617 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100909.batch : 6
+I1105 19:59:18.017434 13435 solver.cpp:243] Iteration 23580, loss = 0.00861286
+I1105 19:59:18.017462 13435 solver.cpp:592] Iteration 23580, lr = 0.001
+I1105 19:59:19.015172 13435 solver.cpp:243] Iteration 23585, loss = 0.0101429
+I1105 19:59:19.015202 13435 solver.cpp:592] Iteration 23585, lr = 0.001
+I1105 19:59:20.011790 13435 solver.cpp:243] Iteration 23590, loss = 0.00704193
+I1105 19:59:20.011817 13435 solver.cpp:592] Iteration 23590, lr = 0.001
+I1105 19:59:21.011037 13435 solver.cpp:243] Iteration 23595, loss = 0.00534781
+I1105 19:59:21.011065 13435 solver.cpp:592] Iteration 23595, lr = 0.001
+I1105 19:59:21.972218 13435 solver.cpp:243] Iteration 23600, loss = 0.00394671
+I1105 19:59:21.972270 13435 solver.cpp:592] Iteration 23600, lr = 0.001
+I1105 19:59:23.013615 13435 solver.cpp:243] Iteration 23605, loss = 0.00535936
+I1105 19:59:23.013643 13435 solver.cpp:592] Iteration 23605, lr = 0.001
+I1105 19:59:23.974273 13435 solver.cpp:243] Iteration 23610, loss = 0.00427043
+I1105 19:59:23.974314 13435 solver.cpp:592] Iteration 23610, lr = 0.001
+E1105 19:59:24.636502 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110725.batch : 7
+E1105 19:59:24.661715 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101008.batch : 8
+I1105 19:59:25.031330 13435 solver.cpp:243] Iteration 23615, loss = 0.00499116
+I1105 19:59:25.031358 13435 solver.cpp:592] Iteration 23615, lr = 0.001
+I1105 19:59:25.970222 13435 solver.cpp:243] Iteration 23620, loss = 0.00601989
+I1105 19:59:25.970259 13435 solver.cpp:592] Iteration 23620, lr = 0.001
+I1105 19:59:27.005502 13435 solver.cpp:243] Iteration 23625, loss = 0.00616642
+I1105 19:59:27.005530 13435 solver.cpp:592] Iteration 23625, lr = 0.001
+I1105 19:59:27.998535 13435 solver.cpp:243] Iteration 23630, loss = 0.00810247
+I1105 19:59:27.998621 13435 solver.cpp:592] Iteration 23630, lr = 0.001
+I1105 19:59:28.989080 13435 solver.cpp:243] Iteration 23635, loss = 0.00728215
+I1105 19:59:28.989106 13435 solver.cpp:592] Iteration 23635, lr = 0.001
+I1105 19:59:29.985404 13435 solver.cpp:243] Iteration 23640, loss = 0.00569498
+I1105 19:59:29.985431 13435 solver.cpp:592] Iteration 23640, lr = 0.001
+I1105 19:59:30.975574 13435 solver.cpp:243] Iteration 23645, loss = 0.00709697
+I1105 19:59:30.975600 13435 solver.cpp:592] Iteration 23645, lr = 0.001
+I1105 19:59:31.969707 13435 solver.cpp:243] Iteration 23650, loss = 0.00633709
+I1105 19:59:31.969735 13435 solver.cpp:592] Iteration 23650, lr = 0.001
+I1105 19:59:32.968591 13435 solver.cpp:243] Iteration 23655, loss = 0.00724433
+I1105 19:59:32.968618 13435 solver.cpp:592] Iteration 23655, lr = 0.001
+I1105 19:59:33.962952 13435 solver.cpp:243] Iteration 23660, loss = 0.00686368
+I1105 19:59:33.962978 13435 solver.cpp:592] Iteration 23660, lr = 0.001
+I1105 19:59:34.954766 13435 solver.cpp:243] Iteration 23665, loss = 0.00593976
+I1105 19:59:34.954792 13435 solver.cpp:592] Iteration 23665, lr = 0.001
+I1105 19:59:35.952126 13435 solver.cpp:243] Iteration 23670, loss = 0.00664216
+I1105 19:59:35.952152 13435 solver.cpp:592] Iteration 23670, lr = 0.001
+I1105 19:59:36.945914 13435 solver.cpp:243] Iteration 23675, loss = 0.00699536
+I1105 19:59:36.945937 13435 solver.cpp:592] Iteration 23675, lr = 0.001
+I1105 19:59:37.936967 13435 solver.cpp:243] Iteration 23680, loss = 0.00688266
+I1105 19:59:37.936993 13435 solver.cpp:592] Iteration 23680, lr = 0.001
+I1105 19:59:38.928761 13435 solver.cpp:243] Iteration 23685, loss = 0.0069994
+I1105 19:59:38.928786 13435 solver.cpp:592] Iteration 23685, lr = 0.001
+I1105 19:59:39.927172 13435 solver.cpp:243] Iteration 23690, loss = 0.00514003
+I1105 19:59:39.927206 13435 solver.cpp:592] Iteration 23690, lr = 0.001
+I1105 19:59:40.920157 13435 solver.cpp:243] Iteration 23695, loss = 0.00571652
+I1105 19:59:40.920192 13435 solver.cpp:592] Iteration 23695, lr = 0.001
+I1105 19:59:41.911823 13435 solver.cpp:243] Iteration 23700, loss = 0.00522603
+I1105 19:59:41.911850 13435 solver.cpp:592] Iteration 23700, lr = 0.001
+I1105 19:59:42.906345 13435 solver.cpp:243] Iteration 23705, loss = 0.00532384
+I1105 19:59:42.906373 13435 solver.cpp:592] Iteration 23705, lr = 0.001
+I1105 19:59:43.895231 13435 solver.cpp:243] Iteration 23710, loss = 0.00536852
+I1105 19:59:43.895258 13435 solver.cpp:592] Iteration 23710, lr = 0.001
+E1105 19:59:44.015277 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110710.batch : 9
+E1105 19:59:44.022948 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100929.batch : 10
+I1105 19:59:44.854502 13435 solver.cpp:243] Iteration 23715, loss = 0.0129834
+I1105 19:59:44.854527 13435 solver.cpp:592] Iteration 23715, lr = 0.001
+I1105 19:59:45.888797 13435 solver.cpp:243] Iteration 23720, loss = 0.021812
+I1105 19:59:45.888823 13435 solver.cpp:592] Iteration 23720, lr = 0.001
+I1105 19:59:46.878047 13435 solver.cpp:243] Iteration 23725, loss = 0.0121533
+I1105 19:59:46.878073 13435 solver.cpp:592] Iteration 23725, lr = 0.001
+I1105 19:59:47.877153 13435 solver.cpp:243] Iteration 23730, loss = 0.0148852
+I1105 19:59:47.877179 13435 solver.cpp:592] Iteration 23730, lr = 0.001
+I1105 19:59:48.872449 13435 solver.cpp:243] Iteration 23735, loss = 0.0135357
+I1105 19:59:48.872476 13435 solver.cpp:592] Iteration 23735, lr = 0.001
+I1105 19:59:49.869035 13435 solver.cpp:243] Iteration 23740, loss = 0.00937818
+I1105 19:59:49.869060 13435 solver.cpp:592] Iteration 23740, lr = 0.001
+I1105 19:59:50.859661 13435 solver.cpp:243] Iteration 23745, loss = 0.0111443
+I1105 19:59:50.859688 13435 solver.cpp:592] Iteration 23745, lr = 0.001
+I1105 19:59:51.818194 13435 solver.cpp:243] Iteration 23750, loss = 0.00967025
+I1105 19:59:51.818222 13435 solver.cpp:592] Iteration 23750, lr = 0.001
+I1105 19:59:52.809828 13435 solver.cpp:243] Iteration 23755, loss = 0.0118654
+I1105 19:59:52.809860 13435 solver.cpp:592] Iteration 23755, lr = 0.001
+I1105 19:59:53.807692 13435 solver.cpp:243] Iteration 23760, loss = 0.010677
+I1105 19:59:53.807721 13435 solver.cpp:592] Iteration 23760, lr = 0.001
+I1105 19:59:54.807772 13435 solver.cpp:243] Iteration 23765, loss = 0.011228
+I1105 19:59:54.807801 13435 solver.cpp:592] Iteration 23765, lr = 0.001
+I1105 19:59:55.841737 13435 solver.cpp:243] Iteration 23770, loss = 0.00981797
+I1105 19:59:55.841761 13435 solver.cpp:592] Iteration 23770, lr = 0.001
+I1105 19:59:56.834293 13435 solver.cpp:243] Iteration 23775, loss = 0.0100338
+I1105 19:59:56.834319 13435 solver.cpp:592] Iteration 23775, lr = 0.001
+I1105 19:59:57.793870 13435 solver.cpp:243] Iteration 23780, loss = 0.00969093
+I1105 19:59:57.793902 13435 solver.cpp:592] Iteration 23780, lr = 0.001
+I1105 19:59:58.832932 13435 solver.cpp:243] Iteration 23785, loss = 0.0132981
+I1105 19:59:58.833009 13435 solver.cpp:592] Iteration 23785, lr = 0.001
+E1105 19:59:59.582242 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100806.batch : 11
+E1105 19:59:59.596590 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110720.batch : 12
+I1105 19:59:59.848857 13435 solver.cpp:243] Iteration 23790, loss = 0.00991565
+I1105 19:59:59.848882 13435 solver.cpp:592] Iteration 23790, lr = 0.001
+I1105 20:00:00.797113 13435 solver.cpp:243] Iteration 23795, loss = 0.0218354
+I1105 20:00:00.797170 13435 solver.cpp:592] Iteration 23795, lr = 0.001
+I1105 20:00:01.835726 13435 solver.cpp:243] Iteration 23800, loss = 0.0193135
+I1105 20:00:01.835764 13435 solver.cpp:592] Iteration 23800, lr = 0.001
+I1105 20:00:02.857174 13435 solver.cpp:243] Iteration 23805, loss = 0.021139
+I1105 20:00:02.857200 13435 solver.cpp:592] Iteration 23805, lr = 0.001
+I1105 20:00:03.847422 13435 solver.cpp:243] Iteration 23810, loss = 0.0188113
+I1105 20:00:03.847451 13435 solver.cpp:592] Iteration 23810, lr = 0.001
+I1105 20:00:04.807904 13435 solver.cpp:243] Iteration 23815, loss = 0.0161984
+I1105 20:00:04.807931 13435 solver.cpp:592] Iteration 23815, lr = 0.001
+I1105 20:00:05.809572 13435 solver.cpp:243] Iteration 23820, loss = 0.0172741
+I1105 20:00:05.809598 13435 solver.cpp:592] Iteration 23820, lr = 0.001
+I1105 20:00:06.805994 13435 solver.cpp:243] Iteration 23825, loss = 0.0146702
+I1105 20:00:06.806021 13435 solver.cpp:592] Iteration 23825, lr = 0.001
+I1105 20:00:07.802078 13435 solver.cpp:243] Iteration 23830, loss = 0.018366
+I1105 20:00:07.802103 13435 solver.cpp:592] Iteration 23830, lr = 0.001
+I1105 20:00:08.842798 13435 solver.cpp:243] Iteration 23835, loss = 0.0168226
+I1105 20:00:08.842825 13435 solver.cpp:592] Iteration 23835, lr = 0.001
+I1105 20:00:09.800809 13435 solver.cpp:243] Iteration 23840, loss = 0.0163846
+I1105 20:00:09.800835 13435 solver.cpp:592] Iteration 23840, lr = 0.001
+I1105 20:00:10.843616 13435 solver.cpp:243] Iteration 23845, loss = 0.0160883
+I1105 20:00:10.843654 13435 solver.cpp:592] Iteration 23845, lr = 0.001
+E1105 20:00:11.382791 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101006.batch : 0
+E1105 20:00:11.401895 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100929.batch : 1
+I1105 20:00:11.801870 13435 solver.cpp:243] Iteration 23850, loss = 0.0148569
+I1105 20:00:11.801913 13435 solver.cpp:592] Iteration 23850, lr = 0.001
+I1105 20:00:12.842669 13435 solver.cpp:243] Iteration 23855, loss = 0.0181656
+I1105 20:00:12.842694 13435 solver.cpp:592] Iteration 23855, lr = 0.001
+I1105 20:00:13.833044 13435 solver.cpp:243] Iteration 23860, loss = 0.0121785
+I1105 20:00:13.833070 13435 solver.cpp:592] Iteration 23860, lr = 0.001
+I1105 20:00:14.825901 13435 solver.cpp:243] Iteration 23865, loss = 0.0113538
+I1105 20:00:14.825927 13435 solver.cpp:592] Iteration 23865, lr = 0.001
+I1105 20:00:15.818410 13435 solver.cpp:243] Iteration 23870, loss = 0.0103957
+I1105 20:00:15.818444 13435 solver.cpp:592] Iteration 23870, lr = 0.001
+I1105 20:00:16.812839 13435 solver.cpp:243] Iteration 23875, loss = 0.00809173
+I1105 20:00:16.812875 13435 solver.cpp:592] Iteration 23875, lr = 0.001
+I1105 20:00:17.772611 13435 solver.cpp:243] Iteration 23880, loss = 0.00876394
+I1105 20:00:17.772639 13435 solver.cpp:592] Iteration 23880, lr = 0.001
+I1105 20:00:18.765331 13435 solver.cpp:243] Iteration 23885, loss = 0.0106142
+I1105 20:00:18.765367 13435 solver.cpp:592] Iteration 23885, lr = 0.001
+I1105 20:00:19.799646 13435 solver.cpp:243] Iteration 23890, loss = 0.00812943
+I1105 20:00:19.799674 13435 solver.cpp:592] Iteration 23890, lr = 0.001
+I1105 20:00:20.755856 13435 solver.cpp:243] Iteration 23895, loss = 0.00919511
+I1105 20:00:20.755892 13435 solver.cpp:592] Iteration 23895, lr = 0.001
+I1105 20:00:21.791061 13435 solver.cpp:243] Iteration 23900, loss = 0.00939372
+I1105 20:00:21.791100 13435 solver.cpp:592] Iteration 23900, lr = 0.001
+I1105 20:00:22.779372 13435 solver.cpp:243] Iteration 23905, loss = 0.0132229
+I1105 20:00:22.779417 13435 solver.cpp:592] Iteration 23905, lr = 0.001
+I1105 20:00:23.776490 13435 solver.cpp:243] Iteration 23910, loss = 0.00810602
+I1105 20:00:23.776520 13435 solver.cpp:592] Iteration 23910, lr = 0.001
+I1105 20:00:24.769981 13435 solver.cpp:243] Iteration 23915, loss = 0.00896219
+I1105 20:00:24.770009 13435 solver.cpp:592] Iteration 23915, lr = 0.001
+I1105 20:00:25.762126 13435 solver.cpp:243] Iteration 23920, loss = 0.00957308
+I1105 20:00:25.762153 13435 solver.cpp:592] Iteration 23920, lr = 0.001
+I1105 20:00:26.756271 13435 solver.cpp:243] Iteration 23925, loss = 0.00850661
+I1105 20:00:26.756309 13435 solver.cpp:592] Iteration 23925, lr = 0.001
+I1105 20:00:27.752284 13435 solver.cpp:243] Iteration 23930, loss = 0.00675366
+I1105 20:00:27.752310 13435 solver.cpp:592] Iteration 23930, lr = 0.001
+I1105 20:00:28.743958 13435 solver.cpp:243] Iteration 23935, loss = 0.00807757
+I1105 20:00:28.743984 13435 solver.cpp:592] Iteration 23935, lr = 0.001
+I1105 20:00:29.737895 13435 solver.cpp:243] Iteration 23940, loss = 0.00900196
+I1105 20:00:29.737970 13435 solver.cpp:592] Iteration 23940, lr = 0.001
+I1105 20:00:30.727803 13435 solver.cpp:243] Iteration 23945, loss = 0.00928692
+I1105 20:00:30.727839 13435 solver.cpp:592] Iteration 23945, lr = 0.001
+I1105 20:00:31.719637 13435 solver.cpp:243] Iteration 23950, loss = 0.00925875
+I1105 20:00:31.719666 13435 solver.cpp:592] Iteration 23950, lr = 0.001
+I1105 20:00:32.714172 13435 solver.cpp:243] Iteration 23955, loss = 0.00781072
+I1105 20:00:32.714197 13435 solver.cpp:592] Iteration 23955, lr = 0.001
+I1105 20:00:33.707072 13435 solver.cpp:243] Iteration 23960, loss = 0.00817221
+I1105 20:00:33.707108 13435 solver.cpp:592] Iteration 23960, lr = 0.001
+E1105 20:00:33.803985 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110720.batch : 2
+E1105 20:00:33.808373 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110710.batch : 3
+I1105 20:00:34.704860 13435 solver.cpp:243] Iteration 23965, loss = 0.0104769
+I1105 20:00:34.704886 13435 solver.cpp:592] Iteration 23965, lr = 0.001
+I1105 20:00:35.699545 13435 solver.cpp:243] Iteration 23970, loss = 0.0165572
+I1105 20:00:35.699571 13435 solver.cpp:592] Iteration 23970, lr = 0.001
+I1105 20:00:36.687774 13435 solver.cpp:243] Iteration 23975, loss = 0.0149894
+I1105 20:00:36.687800 13435 solver.cpp:592] Iteration 23975, lr = 0.001
+I1105 20:00:37.681607 13435 solver.cpp:243] Iteration 23980, loss = 0.0138362
+I1105 20:00:37.681632 13435 solver.cpp:592] Iteration 23980, lr = 0.001
+I1105 20:00:38.637408 13435 solver.cpp:243] Iteration 23985, loss = 0.0126381
+I1105 20:00:38.637433 13435 solver.cpp:592] Iteration 23985, lr = 0.001
+I1105 20:00:39.667755 13435 solver.cpp:243] Iteration 23990, loss = 0.0138727
+I1105 20:00:39.667783 13435 solver.cpp:592] Iteration 23990, lr = 0.001
+I1105 20:00:40.675519 13435 solver.cpp:243] Iteration 23995, loss = 0.0120778
+I1105 20:00:40.675544 13435 solver.cpp:592] Iteration 23995, lr = 0.001
+E1105 20:00:41.332664 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100730.batch : 4
+E1105 20:00:41.334429 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100806.batch : 5
+I1105 20:00:41.491037 13435 solver.cpp:349] Iteration 24000, Testing net (#0)
+I1105 20:00:41.491062 13435 net.cpp:781] Copying source layer data
+I1105 20:00:41.491068 13435 net.cpp:781] Copying source layer conv1
+I1105 20:00:41.491075 13435 net.cpp:781] Copying source layer relu1
+I1105 20:00:41.491078 13435 net.cpp:781] Copying source layer pool1
+I1105 20:00:41.491082 13435 net.cpp:781] Copying source layer conv2
+I1105 20:00:41.491086 13435 net.cpp:781] Copying source layer relu2
+I1105 20:00:41.491091 13435 net.cpp:781] Copying source layer pool2
+I1105 20:00:41.491103 13435 net.cpp:781] Copying source layer conv3
+I1105 20:00:41.491108 13435 net.cpp:781] Copying source layer relu3
+I1105 20:00:41.491111 13435 net.cpp:781] Copying source layer fc4
+I1105 20:00:41.491117 13435 net.cpp:781] Copying source layer relu4
+I1105 20:00:41.491121 13435 net.cpp:781] Copying source layer fc5
+I1105 20:00:41.491124 13435 net.cpp:781] Copying source layer loss
+E1105 20:00:45.882890 13435 solver.cpp:417]     Test net output #0: loss = 0.0136549 (* 1 = 0.0136549 loss)
+I1105 20:00:46.009642 13435 solver.cpp:243] Iteration 24000, loss = 0.012412
+I1105 20:00:46.009675 13435 solver.cpp:592] Iteration 24000, lr = 0.001
+I1105 20:00:47.066061 13435 solver.cpp:243] Iteration 24005, loss = 0.0183184
+I1105 20:00:47.066087 13435 solver.cpp:592] Iteration 24005, lr = 0.001
+I1105 20:00:48.056957 13435 solver.cpp:243] Iteration 24010, loss = 0.0211597
+I1105 20:00:48.056983 13435 solver.cpp:592] Iteration 24010, lr = 0.001
+I1105 20:00:49.058212 13435 solver.cpp:243] Iteration 24015, loss = 0.0173593
+I1105 20:00:49.058240 13435 solver.cpp:592] Iteration 24015, lr = 0.001
+I1105 20:00:50.047597 13435 solver.cpp:243] Iteration 24020, loss = 0.0155349
+I1105 20:00:50.047624 13435 solver.cpp:592] Iteration 24020, lr = 0.001
+I1105 20:00:51.041252 13435 solver.cpp:243] Iteration 24025, loss = 0.014505
+I1105 20:00:51.041303 13435 solver.cpp:592] Iteration 24025, lr = 0.001
+I1105 20:00:52.037446 13435 solver.cpp:243] Iteration 24030, loss = 0.0133729
+I1105 20:00:52.037474 13435 solver.cpp:592] Iteration 24030, lr = 0.001
+I1105 20:00:53.029695 13435 solver.cpp:243] Iteration 24035, loss = 0.0179999
+I1105 20:00:53.029721 13435 solver.cpp:592] Iteration 24035, lr = 0.001
+I1105 20:00:54.024987 13435 solver.cpp:243] Iteration 24040, loss = 0.0145075
+I1105 20:00:54.025017 13435 solver.cpp:592] Iteration 24040, lr = 0.001
+I1105 20:00:54.984048 13435 solver.cpp:243] Iteration 24045, loss = 0.0162739
+I1105 20:00:54.984076 13435 solver.cpp:592] Iteration 24045, lr = 0.001
+E1105 20:00:55.645999 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100829.batch : 6
+E1105 20:00:55.650568 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101003.batch : 7
+I1105 20:00:56.029115 13435 solver.cpp:243] Iteration 24050, loss = 0.0155002
+I1105 20:00:56.029145 13435 solver.cpp:592] Iteration 24050, lr = 0.001
+I1105 20:00:57.018173 13435 solver.cpp:243] Iteration 24055, loss = 0.0141593
+I1105 20:00:57.018199 13435 solver.cpp:592] Iteration 24055, lr = 0.001
+I1105 20:00:58.007138 13435 solver.cpp:243] Iteration 24060, loss = 0.0125762
+I1105 20:00:58.007165 13435 solver.cpp:592] Iteration 24060, lr = 0.001
+I1105 20:00:59.004883 13435 solver.cpp:243] Iteration 24065, loss = 0.00905523
+I1105 20:00:59.004909 13435 solver.cpp:592] Iteration 24065, lr = 0.001
+I1105 20:00:59.999289 13435 solver.cpp:243] Iteration 24070, loss = 0.00799504
+I1105 20:00:59.999393 13435 solver.cpp:592] Iteration 24070, lr = 0.001
+I1105 20:01:00.992282 13435 solver.cpp:243] Iteration 24075, loss = 0.00878908
+I1105 20:01:00.992310 13435 solver.cpp:592] Iteration 24075, lr = 0.001
+I1105 20:01:01.989452 13435 solver.cpp:243] Iteration 24080, loss = 0.00774136
+I1105 20:01:01.989478 13435 solver.cpp:592] Iteration 24080, lr = 0.001
+I1105 20:01:02.978507 13435 solver.cpp:243] Iteration 24085, loss = 0.00891696
+I1105 20:01:02.978543 13435 solver.cpp:592] Iteration 24085, lr = 0.001
+I1105 20:01:03.971521 13435 solver.cpp:243] Iteration 24090, loss = 0.0092403
+I1105 20:01:03.971559 13435 solver.cpp:592] Iteration 24090, lr = 0.001
+I1105 20:01:04.969533 13435 solver.cpp:243] Iteration 24095, loss = 0.00790146
+I1105 20:01:04.969568 13435 solver.cpp:592] Iteration 24095, lr = 0.001
+I1105 20:01:05.961242 13435 solver.cpp:243] Iteration 24100, loss = 0.00742262
+I1105 20:01:05.961268 13435 solver.cpp:592] Iteration 24100, lr = 0.001
+I1105 20:01:06.956027 13435 solver.cpp:243] Iteration 24105, loss = 0.00769503
+I1105 20:01:06.956053 13435 solver.cpp:592] Iteration 24105, lr = 0.001
+E1105 20:01:07.020512 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100822.batch : 8
+E1105 20:01:07.043097 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101008.batch : 9
+I1105 20:01:07.964818 13435 solver.cpp:243] Iteration 24110, loss = 0.0104239
+I1105 20:01:07.964843 13435 solver.cpp:592] Iteration 24110, lr = 0.001
+I1105 20:01:08.944291 13435 solver.cpp:243] Iteration 24115, loss = 0.0134204
+I1105 20:01:08.944316 13435 solver.cpp:592] Iteration 24115, lr = 0.001
+I1105 20:01:09.936523 13435 solver.cpp:243] Iteration 24120, loss = 0.011528
+I1105 20:01:09.936548 13435 solver.cpp:592] Iteration 24120, lr = 0.001
+I1105 20:01:10.928081 13435 solver.cpp:243] Iteration 24125, loss = 0.00698935
+I1105 20:01:10.928107 13435 solver.cpp:592] Iteration 24125, lr = 0.001
+I1105 20:01:11.924058 13435 solver.cpp:243] Iteration 24130, loss = 0.00671632
+I1105 20:01:11.924087 13435 solver.cpp:592] Iteration 24130, lr = 0.001
+I1105 20:01:12.921332 13435 solver.cpp:243] Iteration 24135, loss = 0.0053752
+I1105 20:01:12.921357 13435 solver.cpp:592] Iteration 24135, lr = 0.001
+I1105 20:01:13.916131 13435 solver.cpp:243] Iteration 24140, loss = 0.0063175
+I1105 20:01:13.916159 13435 solver.cpp:592] Iteration 24140, lr = 0.001
+I1105 20:01:14.909092 13435 solver.cpp:243] Iteration 24145, loss = 0.00580126
+I1105 20:01:14.909118 13435 solver.cpp:592] Iteration 24145, lr = 0.001
+I1105 20:01:15.897371 13435 solver.cpp:243] Iteration 24150, loss = 0.00574297
+I1105 20:01:15.897395 13435 solver.cpp:592] Iteration 24150, lr = 0.001
+I1105 20:01:16.887784 13435 solver.cpp:243] Iteration 24155, loss = 0.0053845
+I1105 20:01:16.887809 13435 solver.cpp:592] Iteration 24155, lr = 0.001
+I1105 20:01:17.883970 13435 solver.cpp:243] Iteration 24160, loss = 0.00625812
+I1105 20:01:17.884007 13435 solver.cpp:592] Iteration 24160, lr = 0.001
+I1105 20:01:18.878841 13435 solver.cpp:243] Iteration 24165, loss = 0.0066831
+I1105 20:01:18.878870 13435 solver.cpp:592] Iteration 24165, lr = 0.001
+I1105 20:01:19.874222 13435 solver.cpp:243] Iteration 24170, loss = 0.00529141
+I1105 20:01:19.874250 13435 solver.cpp:592] Iteration 24170, lr = 0.001
+I1105 20:01:20.865669 13435 solver.cpp:243] Iteration 24175, loss = 0.00459279
+I1105 20:01:20.865715 13435 solver.cpp:592] Iteration 24175, lr = 0.001
+I1105 20:01:21.860187 13435 solver.cpp:243] Iteration 24180, loss = 0.00662635
+I1105 20:01:21.860221 13435 solver.cpp:592] Iteration 24180, lr = 0.001
+I1105 20:01:22.860553 13435 solver.cpp:243] Iteration 24185, loss = 0.0051874
+I1105 20:01:22.860589 13435 solver.cpp:592] Iteration 24185, lr = 0.001
+I1105 20:01:23.846320 13435 solver.cpp:243] Iteration 24190, loss = 0.00526625
+I1105 20:01:23.846355 13435 solver.cpp:592] Iteration 24190, lr = 0.001
+E1105 20:01:24.387313 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100909.batch : 10
+E1105 20:01:24.396646 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110725.batch : 11
+I1105 20:01:24.807260 13435 solver.cpp:243] Iteration 24195, loss = 0.005378
+I1105 20:01:24.807287 13435 solver.cpp:592] Iteration 24195, lr = 0.001
+I1105 20:01:25.839048 13435 solver.cpp:243] Iteration 24200, loss = 0.0225283
+I1105 20:01:25.839076 13435 solver.cpp:592] Iteration 24200, lr = 0.001
+I1105 20:01:26.837467 13435 solver.cpp:243] Iteration 24205, loss = 0.00793628
+I1105 20:01:26.837494 13435 solver.cpp:592] Iteration 24205, lr = 0.001
+I1105 20:01:27.838878 13435 solver.cpp:243] Iteration 24210, loss = 0.00547268
+I1105 20:01:27.838914 13435 solver.cpp:592] Iteration 24210, lr = 0.001
+I1105 20:01:28.825489 13435 solver.cpp:243] Iteration 24215, loss = 0.00389426
+I1105 20:01:28.825525 13435 solver.cpp:592] Iteration 24215, lr = 0.001
+I1105 20:01:29.821599 13435 solver.cpp:243] Iteration 24220, loss = 0.00618042
+I1105 20:01:29.821636 13435 solver.cpp:592] Iteration 24220, lr = 0.001
+I1105 20:01:30.815223 13435 solver.cpp:243] Iteration 24225, loss = 0.00416276
+I1105 20:01:30.815351 13435 solver.cpp:592] Iteration 24225, lr = 0.001
+I1105 20:01:31.773479 13435 solver.cpp:243] Iteration 24230, loss = 0.00408407
+I1105 20:01:31.773516 13435 solver.cpp:592] Iteration 24230, lr = 0.001
+I1105 20:01:32.808059 13435 solver.cpp:243] Iteration 24235, loss = 0.0044099
+I1105 20:01:32.808095 13435 solver.cpp:592] Iteration 24235, lr = 0.001
+I1105 20:01:33.797745 13435 solver.cpp:243] Iteration 24240, loss = 0.00363301
+I1105 20:01:33.797771 13435 solver.cpp:592] Iteration 24240, lr = 0.001
+I1105 20:01:34.791601 13435 solver.cpp:243] Iteration 24245, loss = 0.00518011
+I1105 20:01:34.791635 13435 solver.cpp:592] Iteration 24245, lr = 0.001
+I1105 20:01:35.790840 13435 solver.cpp:243] Iteration 24250, loss = 0.00371123
+I1105 20:01:35.790868 13435 solver.cpp:592] Iteration 24250, lr = 0.001
+I1105 20:01:36.780102 13435 solver.cpp:243] Iteration 24255, loss = 0.00393309
+I1105 20:01:36.780128 13435 solver.cpp:592] Iteration 24255, lr = 0.001
+I1105 20:01:37.776670 13435 solver.cpp:243] Iteration 24260, loss = 0.00368727
+I1105 20:01:37.776695 13435 solver.cpp:592] Iteration 24260, lr = 0.001
+I1105 20:01:38.769460 13435 solver.cpp:243] Iteration 24265, loss = 0.00378671
+I1105 20:01:38.769486 13435 solver.cpp:592] Iteration 24265, lr = 0.001
+I1105 20:01:39.763248 13435 solver.cpp:243] Iteration 24270, loss = 0.00244607
+I1105 20:01:39.763272 13435 solver.cpp:592] Iteration 24270, lr = 0.001
+I1105 20:01:40.762804 13435 solver.cpp:243] Iteration 24275, loss = 0.00418614
+I1105 20:01:40.762828 13435 solver.cpp:592] Iteration 24275, lr = 0.001
+I1105 20:01:41.753211 13435 solver.cpp:243] Iteration 24280, loss = 0.00462112
+I1105 20:01:41.753238 13435 solver.cpp:592] Iteration 24280, lr = 0.001
+I1105 20:01:42.744860 13435 solver.cpp:243] Iteration 24285, loss = 0.00349557
+I1105 20:01:42.744886 13435 solver.cpp:592] Iteration 24285, lr = 0.001
+I1105 20:01:43.736244 13435 solver.cpp:243] Iteration 24290, loss = 0.00363447
+I1105 20:01:43.736281 13435 solver.cpp:592] Iteration 24290, lr = 0.001
+I1105 20:01:44.734247 13435 solver.cpp:243] Iteration 24295, loss = 0.00360369
+I1105 20:01:44.734284 13435 solver.cpp:592] Iteration 24295, lr = 0.001
+I1105 20:01:45.724331 13435 solver.cpp:243] Iteration 24300, loss = 0.00349478
+I1105 20:01:45.724357 13435 solver.cpp:592] Iteration 24300, lr = 0.001
+I1105 20:01:46.678764 13435 solver.cpp:243] Iteration 24305, loss = 0.00388875
+I1105 20:01:46.678804 13435 solver.cpp:592] Iteration 24305, lr = 0.001
+E1105 20:01:47.209628 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110709.batch : 12
+E1105 20:01:47.210782 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101006.batch : 0
+I1105 20:01:47.733412 13435 solver.cpp:243] Iteration 24310, loss = 0.00427644
+I1105 20:01:47.733448 13435 solver.cpp:592] Iteration 24310, lr = 0.001
+I1105 20:01:48.712165 13435 solver.cpp:243] Iteration 24315, loss = 0.0167259
+I1105 20:01:48.712200 13435 solver.cpp:592] Iteration 24315, lr = 0.001
+I1105 20:01:49.709223 13435 solver.cpp:243] Iteration 24320, loss = 0.0119403
+I1105 20:01:49.709249 13435 solver.cpp:592] Iteration 24320, lr = 0.001
+I1105 20:01:50.698840 13435 solver.cpp:243] Iteration 24325, loss = 0.00902121
+I1105 20:01:50.698866 13435 solver.cpp:592] Iteration 24325, lr = 0.001
+I1105 20:01:51.687963 13435 solver.cpp:243] Iteration 24330, loss = 0.00875199
+I1105 20:01:51.687988 13435 solver.cpp:592] Iteration 24330, lr = 0.001
+I1105 20:01:52.689561 13435 solver.cpp:243] Iteration 24335, loss = 0.0105044
+I1105 20:01:52.689587 13435 solver.cpp:592] Iteration 24335, lr = 0.001
+I1105 20:01:53.679990 13435 solver.cpp:243] Iteration 24340, loss = 0.00775042
+I1105 20:01:53.680016 13435 solver.cpp:592] Iteration 24340, lr = 0.001
+I1105 20:01:54.640851 13435 solver.cpp:243] Iteration 24345, loss = 0.00971498
+I1105 20:01:54.640880 13435 solver.cpp:592] Iteration 24345, lr = 0.001
+I1105 20:01:55.676841 13435 solver.cpp:243] Iteration 24350, loss = 0.00806568
+I1105 20:01:55.676865 13435 solver.cpp:592] Iteration 24350, lr = 0.001
+I1105 20:01:56.669275 13435 solver.cpp:243] Iteration 24355, loss = 0.00651722
+I1105 20:01:56.669301 13435 solver.cpp:592] Iteration 24355, lr = 0.001
+I1105 20:01:57.623574 13435 solver.cpp:243] Iteration 24360, loss = 0.0065039
+I1105 20:01:57.623611 13435 solver.cpp:592] Iteration 24360, lr = 0.001
+I1105 20:01:58.621304 13435 solver.cpp:243] Iteration 24365, loss = 0.00774943
+I1105 20:01:58.621330 13435 solver.cpp:592] Iteration 24365, lr = 0.001
+E1105 20:01:59.489437 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110725.batch : 1
+E1105 20:01:59.513020 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110710.batch : 2
+I1105 20:01:59.678319 13435 solver.cpp:243] Iteration 24370, loss = 0.00950781
+I1105 20:01:59.678349 13435 solver.cpp:592] Iteration 24370, lr = 0.001
+I1105 20:02:00.660801 13435 solver.cpp:243] Iteration 24375, loss = 0.00854034
+I1105 20:02:00.660827 13435 solver.cpp:592] Iteration 24375, lr = 0.001
+I1105 20:02:01.655553 13435 solver.cpp:243] Iteration 24380, loss = 0.00839468
+I1105 20:02:01.655623 13435 solver.cpp:592] Iteration 24380, lr = 0.001
+I1105 20:02:02.647507 13435 solver.cpp:243] Iteration 24385, loss = 0.00823096
+I1105 20:02:02.647533 13435 solver.cpp:592] Iteration 24385, lr = 0.001
+I1105 20:02:03.640291 13435 solver.cpp:243] Iteration 24390, loss = 0.00608583
+I1105 20:02:03.640316 13435 solver.cpp:592] Iteration 24390, lr = 0.001
+I1105 20:02:04.626114 13435 solver.cpp:243] Iteration 24395, loss = 0.0059556
+I1105 20:02:04.626150 13435 solver.cpp:592] Iteration 24395, lr = 0.001
+I1105 20:02:05.625262 13435 solver.cpp:243] Iteration 24400, loss = 0.00649976
+I1105 20:02:05.625288 13435 solver.cpp:592] Iteration 24400, lr = 0.001
+I1105 20:02:06.617967 13435 solver.cpp:243] Iteration 24405, loss = 0.00575116
+I1105 20:02:06.618002 13435 solver.cpp:592] Iteration 24405, lr = 0.001
+I1105 20:02:07.612022 13435 solver.cpp:243] Iteration 24410, loss = 0.00606534
+I1105 20:02:07.612057 13435 solver.cpp:592] Iteration 24410, lr = 0.001
+I1105 20:02:08.600700 13435 solver.cpp:243] Iteration 24415, loss = 0.00453743
+I1105 20:02:08.600735 13435 solver.cpp:592] Iteration 24415, lr = 0.001
+I1105 20:02:09.594511 13435 solver.cpp:243] Iteration 24420, loss = 0.00554949
+I1105 20:02:09.594547 13435 solver.cpp:592] Iteration 24420, lr = 0.001
+I1105 20:02:10.553328 13435 solver.cpp:243] Iteration 24425, loss = 0.00586478
+I1105 20:02:10.553362 13435 solver.cpp:592] Iteration 24425, lr = 0.001
+I1105 20:02:11.585710 13435 solver.cpp:243] Iteration 24430, loss = 0.00530165
+I1105 20:02:11.585744 13435 solver.cpp:592] Iteration 24430, lr = 0.001
+I1105 20:02:12.542784 13435 solver.cpp:243] Iteration 24435, loss = 0.00626166
+I1105 20:02:12.542820 13435 solver.cpp:592] Iteration 24435, lr = 0.001
+I1105 20:02:13.582512 13435 solver.cpp:243] Iteration 24440, loss = 0.00485121
+I1105 20:02:13.582540 13435 solver.cpp:592] Iteration 24440, lr = 0.001
+I1105 20:02:14.571329 13435 solver.cpp:243] Iteration 24445, loss = 0.00486137
+I1105 20:02:14.571365 13435 solver.cpp:592] Iteration 24445, lr = 0.001
+I1105 20:02:15.570471 13435 solver.cpp:243] Iteration 24450, loss = 0.00589722
+I1105 20:02:15.570505 13435 solver.cpp:592] Iteration 24450, lr = 0.001
+I1105 20:02:16.561889 13435 solver.cpp:243] Iteration 24455, loss = 0.00551066
+I1105 20:02:16.561915 13435 solver.cpp:592] Iteration 24455, lr = 0.001
+I1105 20:02:17.553375 13435 solver.cpp:243] Iteration 24460, loss = 0.00484363
+I1105 20:02:17.553401 13435 solver.cpp:592] Iteration 24460, lr = 0.001
+I1105 20:02:18.543715 13435 solver.cpp:243] Iteration 24465, loss = 0.00498155
+I1105 20:02:18.543750 13435 solver.cpp:592] Iteration 24465, lr = 0.001
+I1105 20:02:19.542605 13435 solver.cpp:243] Iteration 24470, loss = 0.00548152
+I1105 20:02:19.542640 13435 solver.cpp:592] Iteration 24470, lr = 0.001
+I1105 20:02:20.534911 13435 solver.cpp:243] Iteration 24475, loss = 0.00573572
+I1105 20:02:20.534936 13435 solver.cpp:592] Iteration 24475, lr = 0.001
+E1105 20:02:21.208518 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110720.batch : 3
+E1105 20:02:21.212326 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101003.batch : 4
+I1105 20:02:21.544064 13435 solver.cpp:243] Iteration 24480, loss = 0.00571185
+I1105 20:02:21.544101 13435 solver.cpp:592] Iteration 24480, lr = 0.001
+I1105 20:02:22.524966 13435 solver.cpp:243] Iteration 24485, loss = 0.0195077
+I1105 20:02:22.524999 13435 solver.cpp:592] Iteration 24485, lr = 0.001
+I1105 20:02:23.519551 13435 solver.cpp:243] Iteration 24490, loss = 0.0165134
+I1105 20:02:23.519587 13435 solver.cpp:592] Iteration 24490, lr = 0.001
+I1105 20:02:24.512740 13435 solver.cpp:243] Iteration 24495, loss = 0.0112677
+I1105 20:02:24.512775 13435 solver.cpp:592] Iteration 24495, lr = 0.001
+I1105 20:02:25.505720 13435 solver.cpp:243] Iteration 24500, loss = 0.0118878
+I1105 20:02:25.505746 13435 solver.cpp:592] Iteration 24500, lr = 0.001
+I1105 20:02:26.498544 13435 solver.cpp:243] Iteration 24505, loss = 0.0109867
+I1105 20:02:26.498571 13435 solver.cpp:592] Iteration 24505, lr = 0.001
+I1105 20:02:27.493317 13435 solver.cpp:243] Iteration 24510, loss = 0.0123148
+I1105 20:02:27.493343 13435 solver.cpp:592] Iteration 24510, lr = 0.001
+I1105 20:02:28.412227 13435 solver.cpp:243] Iteration 24515, loss = 0.00932409
+I1105 20:02:28.412266 13435 solver.cpp:592] Iteration 24515, lr = 0.001
+I1105 20:02:29.485394 13435 solver.cpp:243] Iteration 24520, loss = 0.0106066
+I1105 20:02:29.485419 13435 solver.cpp:592] Iteration 24520, lr = 0.001
+I1105 20:02:30.478490 13435 solver.cpp:243] Iteration 24525, loss = 0.00998149
+I1105 20:02:30.478516 13435 solver.cpp:592] Iteration 24525, lr = 0.001
+I1105 20:02:31.471552 13435 solver.cpp:243] Iteration 24530, loss = 0.0107603
+I1105 20:02:31.471577 13435 solver.cpp:592] Iteration 24530, lr = 0.001
+E1105 20:02:32.388969 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100909.batch : 5
+I1105 20:02:32.393218 13435 solver.cpp:243] Iteration 24535, loss = 0.0105845
+I1105 20:02:32.393285 13435 solver.cpp:592] Iteration 24535, lr = 0.001
+E1105 20:02:32.398324 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100929.batch : 6
+I1105 20:02:33.462677 13435 solver.cpp:243] Iteration 24540, loss = 0.0113542
+I1105 20:02:33.462702 13435 solver.cpp:592] Iteration 24540, lr = 0.001
+I1105 20:02:34.456007 13435 solver.cpp:243] Iteration 24545, loss = 0.0125134
+I1105 20:02:34.456032 13435 solver.cpp:592] Iteration 24545, lr = 0.001
+I1105 20:02:35.451942 13435 solver.cpp:243] Iteration 24550, loss = 0.0107036
+I1105 20:02:35.451968 13435 solver.cpp:592] Iteration 24550, lr = 0.001
+I1105 20:02:36.445093 13435 solver.cpp:243] Iteration 24555, loss = 0.00830611
+I1105 20:02:36.445119 13435 solver.cpp:592] Iteration 24555, lr = 0.001
+I1105 20:02:37.435083 13435 solver.cpp:243] Iteration 24560, loss = 0.010139
+I1105 20:02:37.435118 13435 solver.cpp:592] Iteration 24560, lr = 0.001
+I1105 20:02:38.427912 13435 solver.cpp:243] Iteration 24565, loss = 0.00734936
+I1105 20:02:38.427939 13435 solver.cpp:592] Iteration 24565, lr = 0.001
+I1105 20:02:39.431327 13435 solver.cpp:243] Iteration 24570, loss = 0.00765326
+I1105 20:02:39.431354 13435 solver.cpp:592] Iteration 24570, lr = 0.001
+I1105 20:02:40.420043 13435 solver.cpp:243] Iteration 24575, loss = 0.00963793
+I1105 20:02:40.420068 13435 solver.cpp:592] Iteration 24575, lr = 0.001
+I1105 20:02:41.416203 13435 solver.cpp:243] Iteration 24580, loss = 0.0069285
+I1105 20:02:41.416227 13435 solver.cpp:592] Iteration 24580, lr = 0.001
+I1105 20:02:42.404774 13435 solver.cpp:243] Iteration 24585, loss = 0.0102319
+I1105 20:02:42.404801 13435 solver.cpp:592] Iteration 24585, lr = 0.001
+I1105 20:02:43.401549 13435 solver.cpp:243] Iteration 24590, loss = 0.00755161
+I1105 20:02:43.401574 13435 solver.cpp:592] Iteration 24590, lr = 0.001
+I1105 20:02:44.397727 13435 solver.cpp:243] Iteration 24595, loss = 0.00927499
+I1105 20:02:44.397753 13435 solver.cpp:592] Iteration 24595, lr = 0.001
+I1105 20:02:45.389370 13435 solver.cpp:243] Iteration 24600, loss = 0.00855637
+I1105 20:02:45.389395 13435 solver.cpp:592] Iteration 24600, lr = 0.001
+I1105 20:02:46.381254 13435 solver.cpp:243] Iteration 24605, loss = 0.00849503
+I1105 20:02:46.381283 13435 solver.cpp:592] Iteration 24605, lr = 0.001
+I1105 20:02:47.371879 13435 solver.cpp:243] Iteration 24610, loss = 0.00845966
+I1105 20:02:47.371915 13435 solver.cpp:592] Iteration 24610, lr = 0.001
+I1105 20:02:48.366709 13435 solver.cpp:243] Iteration 24615, loss = 0.00857808
+I1105 20:02:48.366736 13435 solver.cpp:592] Iteration 24615, lr = 0.001
+E1105 20:02:49.036844 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100730.batch : 7
+E1105 20:02:49.038141 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100822.batch : 8
+I1105 20:02:49.374861 13435 solver.cpp:243] Iteration 24620, loss = 0.00781944
+I1105 20:02:49.374897 13435 solver.cpp:592] Iteration 24620, lr = 0.001
+I1105 20:02:50.356825 13435 solver.cpp:243] Iteration 24625, loss = 0.00910776
+I1105 20:02:50.356861 13435 solver.cpp:592] Iteration 24625, lr = 0.001
+I1105 20:02:51.311385 13435 solver.cpp:243] Iteration 24630, loss = 0.00817278
+I1105 20:02:51.311411 13435 solver.cpp:592] Iteration 24630, lr = 0.001
+I1105 20:02:52.344980 13435 solver.cpp:243] Iteration 24635, loss = 0.00665346
+I1105 20:02:52.345006 13435 solver.cpp:592] Iteration 24635, lr = 0.001
+I1105 20:02:53.339220 13435 solver.cpp:243] Iteration 24640, loss = 0.00600205
+I1105 20:02:53.339246 13435 solver.cpp:592] Iteration 24640, lr = 0.001
+I1105 20:02:54.333143 13435 solver.cpp:243] Iteration 24645, loss = 0.00549151
+I1105 20:02:54.333170 13435 solver.cpp:592] Iteration 24645, lr = 0.001
+I1105 20:02:55.324843 13435 solver.cpp:243] Iteration 24650, loss = 0.00679668
+I1105 20:02:55.324870 13435 solver.cpp:592] Iteration 24650, lr = 0.001
+I1105 20:02:56.321599 13435 solver.cpp:243] Iteration 24655, loss = 0.00805115
+I1105 20:02:56.321643 13435 solver.cpp:592] Iteration 24655, lr = 0.001
+I1105 20:02:57.310397 13435 solver.cpp:243] Iteration 24660, loss = 0.00666265
+I1105 20:02:57.310425 13435 solver.cpp:592] Iteration 24660, lr = 0.001
+I1105 20:02:58.317164 13435 solver.cpp:243] Iteration 24665, loss = 0.00673299
+I1105 20:02:58.317191 13435 solver.cpp:592] Iteration 24665, lr = 0.001
+I1105 20:02:59.310552 13435 solver.cpp:243] Iteration 24670, loss = 0.0072101
+I1105 20:02:59.310580 13435 solver.cpp:592] Iteration 24670, lr = 0.001
+I1105 20:03:00.273138 13435 solver.cpp:243] Iteration 24675, loss = 0.00635344
+I1105 20:03:00.273169 13435 solver.cpp:592] Iteration 24675, lr = 0.001
+I1105 20:03:01.277390 13435 solver.cpp:243] Iteration 24680, loss = 0.00594386
+I1105 20:03:01.277417 13435 solver.cpp:592] Iteration 24680, lr = 0.001
+I1105 20:03:02.312139 13435 solver.cpp:243] Iteration 24685, loss = 0.00520498
+I1105 20:03:02.312165 13435 solver.cpp:592] Iteration 24685, lr = 0.001
+I1105 20:03:03.311022 13435 solver.cpp:243] Iteration 24690, loss = 0.0056752
+I1105 20:03:03.311142 13435 solver.cpp:592] Iteration 24690, lr = 0.001
+I1105 20:03:04.306730 13435 solver.cpp:243] Iteration 24695, loss = 0.00504183
+I1105 20:03:04.306756 13435 solver.cpp:592] Iteration 24695, lr = 0.001
+E1105 20:03:04.983227 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100829.batch : 9
+E1105 20:03:04.987700 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110709.batch : 10
+I1105 20:03:05.317215 13435 solver.cpp:243] Iteration 24700, loss = 0.00633145
+I1105 20:03:05.317242 13435 solver.cpp:592] Iteration 24700, lr = 0.001
+I1105 20:03:06.296931 13435 solver.cpp:243] Iteration 24705, loss = 0.00999221
+I1105 20:03:06.296957 13435 solver.cpp:592] Iteration 24705, lr = 0.001
+I1105 20:03:07.289847 13435 solver.cpp:243] Iteration 24710, loss = 0.0102276
+I1105 20:03:07.289873 13435 solver.cpp:592] Iteration 24710, lr = 0.001
+I1105 20:03:08.287485 13435 solver.cpp:243] Iteration 24715, loss = 0.00833969
+I1105 20:03:08.287513 13435 solver.cpp:592] Iteration 24715, lr = 0.001
+E1105 20:03:08.585252 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100806.batch : 11
+E1105 20:03:08.599706 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101008.batch : 12
+I1105 20:03:09.300062 13435 solver.cpp:243] Iteration 24720, loss = 0.00608261
+I1105 20:03:09.300087 13435 solver.cpp:592] Iteration 24720, lr = 0.001
+I1105 20:03:10.289618 13435 solver.cpp:243] Iteration 24725, loss = 0.0211908
+I1105 20:03:10.289645 13435 solver.cpp:592] Iteration 24725, lr = 0.001
+I1105 20:03:11.275840 13435 solver.cpp:243] Iteration 24730, loss = 0.0188269
+I1105 20:03:11.275871 13435 solver.cpp:592] Iteration 24730, lr = 0.001
+I1105 20:03:12.279353 13435 solver.cpp:243] Iteration 24735, loss = 0.0180173
+I1105 20:03:12.279381 13435 solver.cpp:592] Iteration 24735, lr = 0.001
+I1105 20:03:13.279707 13435 solver.cpp:243] Iteration 24740, loss = 0.0186384
+I1105 20:03:13.279734 13435 solver.cpp:592] Iteration 24740, lr = 0.001
+I1105 20:03:14.279898 13435 solver.cpp:243] Iteration 24745, loss = 0.0171161
+I1105 20:03:14.279924 13435 solver.cpp:592] Iteration 24745, lr = 0.001
+I1105 20:03:15.280483 13435 solver.cpp:243] Iteration 24750, loss = 0.0165562
+I1105 20:03:15.280509 13435 solver.cpp:592] Iteration 24750, lr = 0.001
+I1105 20:03:16.272106 13435 solver.cpp:243] Iteration 24755, loss = 0.0171576
+I1105 20:03:16.272133 13435 solver.cpp:592] Iteration 24755, lr = 0.001
+I1105 20:03:17.268962 13435 solver.cpp:243] Iteration 24760, loss = 0.0136245
+I1105 20:03:17.268992 13435 solver.cpp:592] Iteration 24760, lr = 0.001
+I1105 20:03:18.240789 13435 solver.cpp:243] Iteration 24765, loss = 0.0156379
+I1105 20:03:18.240816 13435 solver.cpp:592] Iteration 24765, lr = 0.001
+I1105 20:03:19.257942 13435 solver.cpp:243] Iteration 24770, loss = 0.0163327
+I1105 20:03:19.257983 13435 solver.cpp:592] Iteration 24770, lr = 0.001
+E1105 20:03:20.070073 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110720.batch : 0
+E1105 20:03:20.074471 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110710.batch : 1
+I1105 20:03:20.364182 13435 solver.cpp:243] Iteration 24775, loss = 0.0148463
+I1105 20:03:20.364220 13435 solver.cpp:592] Iteration 24775, lr = 0.001
+I1105 20:03:21.351924 13435 solver.cpp:243] Iteration 24780, loss = 0.0106994
+I1105 20:03:21.351959 13435 solver.cpp:592] Iteration 24780, lr = 0.001
+I1105 20:03:22.342353 13435 solver.cpp:243] Iteration 24785, loss = 0.00994031
+I1105 20:03:22.342381 13435 solver.cpp:592] Iteration 24785, lr = 0.001
+I1105 20:03:23.314136 13435 solver.cpp:243] Iteration 24790, loss = 0.0142725
+I1105 20:03:23.314170 13435 solver.cpp:592] Iteration 24790, lr = 0.001
+I1105 20:03:24.363132 13435 solver.cpp:243] Iteration 24795, loss = 0.0125029
+I1105 20:03:24.363159 13435 solver.cpp:592] Iteration 24795, lr = 0.001
+I1105 20:03:25.379304 13435 solver.cpp:243] Iteration 24800, loss = 0.0133165
+I1105 20:03:25.379356 13435 solver.cpp:592] Iteration 24800, lr = 0.001
+I1105 20:03:26.348503 13435 solver.cpp:243] Iteration 24805, loss = 0.0125023
+I1105 20:03:26.348532 13435 solver.cpp:592] Iteration 24805, lr = 0.001
+I1105 20:03:27.393527 13435 solver.cpp:243] Iteration 24810, loss = 0.0131769
+I1105 20:03:27.393564 13435 solver.cpp:592] Iteration 24810, lr = 0.001
+E1105 20:03:27.677989 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100929.batch : 2
+E1105 20:03:27.694900 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100822.batch : 3
+I1105 20:03:28.422772 13435 solver.cpp:243] Iteration 24815, loss = 0.0109677
+I1105 20:03:28.422807 13435 solver.cpp:592] Iteration 24815, lr = 0.001
+I1105 20:03:29.420111 13435 solver.cpp:243] Iteration 24820, loss = 0.0113606
+I1105 20:03:29.420152 13435 solver.cpp:592] Iteration 24820, lr = 0.001
+I1105 20:03:30.445849 13435 solver.cpp:243] Iteration 24825, loss = 0.00784315
+I1105 20:03:30.445888 13435 solver.cpp:592] Iteration 24825, lr = 0.001
+I1105 20:03:31.503407 13435 solver.cpp:243] Iteration 24830, loss = 0.00991337
+I1105 20:03:31.503437 13435 solver.cpp:592] Iteration 24830, lr = 0.001
+I1105 20:03:32.563570 13435 solver.cpp:243] Iteration 24835, loss = 0.00860232
+I1105 20:03:32.563637 13435 solver.cpp:592] Iteration 24835, lr = 0.001
+I1105 20:03:33.618903 13435 solver.cpp:243] Iteration 24840, loss = 0.0091055
+I1105 20:03:33.618985 13435 solver.cpp:592] Iteration 24840, lr = 0.001
+I1105 20:03:34.616632 13435 solver.cpp:243] Iteration 24845, loss = 0.00749219
+I1105 20:03:34.616675 13435 solver.cpp:592] Iteration 24845, lr = 0.001
+I1105 20:03:35.709288 13435 solver.cpp:243] Iteration 24850, loss = 0.00894114
+I1105 20:03:35.709326 13435 solver.cpp:592] Iteration 24850, lr = 0.001
+I1105 20:03:36.737974 13435 solver.cpp:243] Iteration 24855, loss = 0.00735613
+I1105 20:03:36.738004 13435 solver.cpp:592] Iteration 24855, lr = 0.001
+I1105 20:03:37.711175 13435 solver.cpp:243] Iteration 24860, loss = 0.00720769
+I1105 20:03:37.711213 13435 solver.cpp:592] Iteration 24860, lr = 0.001
+I1105 20:03:38.741091 13435 solver.cpp:243] Iteration 24865, loss = 0.00810682
+I1105 20:03:38.741133 13435 solver.cpp:592] Iteration 24865, lr = 0.001
+I1105 20:03:39.868391 13435 solver.cpp:243] Iteration 24870, loss = 0.00829697
+I1105 20:03:39.868437 13435 solver.cpp:592] Iteration 24870, lr = 0.001
+I1105 20:03:40.895143 13435 solver.cpp:243] Iteration 24875, loss = 0.00964642
+I1105 20:03:40.895170 13435 solver.cpp:592] Iteration 24875, lr = 0.001
+I1105 20:03:41.847697 13435 solver.cpp:243] Iteration 24880, loss = 0.00781103
+I1105 20:03:41.847723 13435 solver.cpp:592] Iteration 24880, lr = 0.001
+I1105 20:03:42.884968 13435 solver.cpp:243] Iteration 24885, loss = 0.00875989
+I1105 20:03:42.884994 13435 solver.cpp:592] Iteration 24885, lr = 0.001
+I1105 20:03:43.847347 13435 solver.cpp:243] Iteration 24890, loss = 0.00841978
+I1105 20:03:43.847393 13435 solver.cpp:592] Iteration 24890, lr = 0.001
+I1105 20:03:44.853219 13435 solver.cpp:243] Iteration 24895, loss = 0.00828218
+I1105 20:03:44.853255 13435 solver.cpp:592] Iteration 24895, lr = 0.001
+I1105 20:03:45.866266 13435 solver.cpp:243] Iteration 24900, loss = 0.0078406
+I1105 20:03:45.866297 13435 solver.cpp:592] Iteration 24900, lr = 0.001
+I1105 20:03:46.867559 13435 solver.cpp:243] Iteration 24905, loss = 0.00710283
+I1105 20:03:46.867589 13435 solver.cpp:592] Iteration 24905, lr = 0.001
+I1105 20:03:47.872055 13435 solver.cpp:243] Iteration 24910, loss = 0.00707966
+I1105 20:03:47.872081 13435 solver.cpp:592] Iteration 24910, lr = 0.001
+I1105 20:03:48.918653 13435 solver.cpp:243] Iteration 24915, loss = 0.0098998
+I1105 20:03:48.918679 13435 solver.cpp:592] Iteration 24915, lr = 0.001
+I1105 20:03:49.885035 13435 solver.cpp:243] Iteration 24920, loss = 0.00899373
+I1105 20:03:49.885067 13435 solver.cpp:592] Iteration 24920, lr = 0.001
+I1105 20:03:50.888051 13435 solver.cpp:243] Iteration 24925, loss = 0.0061149
+I1105 20:03:50.888078 13435 solver.cpp:592] Iteration 24925, lr = 0.001
+I1105 20:03:51.930594 13435 solver.cpp:243] Iteration 24930, loss = 0.00867114
+I1105 20:03:51.930619 13435 solver.cpp:592] Iteration 24930, lr = 0.001
+I1105 20:03:52.922343 13435 solver.cpp:243] Iteration 24935, loss = 0.00695879
+I1105 20:03:52.922390 13435 solver.cpp:592] Iteration 24935, lr = 0.001
+I1105 20:03:53.891050 13435 solver.cpp:243] Iteration 24940, loss = 0.00935487
+I1105 20:03:53.891093 13435 solver.cpp:592] Iteration 24940, lr = 0.001
+E1105 20:03:54.182878 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100730.batch : 4
+E1105 20:03:54.184161 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110725.batch : 5
+I1105 20:03:54.939004 13435 solver.cpp:243] Iteration 24945, loss = 0.0127276
+I1105 20:03:54.939033 13435 solver.cpp:592] Iteration 24945, lr = 0.001
+I1105 20:03:55.904075 13435 solver.cpp:243] Iteration 24950, loss = 0.0189315
+I1105 20:03:55.904100 13435 solver.cpp:592] Iteration 24950, lr = 0.001
+I1105 20:03:56.909548 13435 solver.cpp:243] Iteration 24955, loss = 0.00762302
+I1105 20:03:56.909580 13435 solver.cpp:592] Iteration 24955, lr = 0.001
+I1105 20:03:57.952033 13435 solver.cpp:243] Iteration 24960, loss = 0.00520474
+I1105 20:03:57.952059 13435 solver.cpp:592] Iteration 24960, lr = 0.001
+I1105 20:03:58.949231 13435 solver.cpp:243] Iteration 24965, loss = 0.00573485
+I1105 20:03:58.949257 13435 solver.cpp:592] Iteration 24965, lr = 0.001
+I1105 20:03:59.953229 13435 solver.cpp:243] Iteration 24970, loss = 0.00514411
+I1105 20:03:59.953255 13435 solver.cpp:592] Iteration 24970, lr = 0.001
+I1105 20:04:00.911391 13435 solver.cpp:243] Iteration 24975, loss = 0.00505846
+I1105 20:04:00.911419 13435 solver.cpp:592] Iteration 24975, lr = 0.001
+I1105 20:04:01.955101 13435 solver.cpp:243] Iteration 24980, loss = 0.00502447
+I1105 20:04:01.955129 13435 solver.cpp:592] Iteration 24980, lr = 0.001
+I1105 20:04:02.921883 13435 solver.cpp:243] Iteration 24985, loss = 0.00418962
+I1105 20:04:02.921916 13435 solver.cpp:592] Iteration 24985, lr = 0.001
+I1105 20:04:03.969717 13435 solver.cpp:243] Iteration 24990, loss = 0.00517447
+I1105 20:04:03.969804 13435 solver.cpp:592] Iteration 24990, lr = 0.001
+I1105 20:04:04.927609 13435 solver.cpp:243] Iteration 24995, loss = 0.00524832
+I1105 20:04:04.927641 13435 solver.cpp:592] Iteration 24995, lr = 0.001
+I1105 20:04:05.727150 13435 solver.cpp:470] Snapshotting to binary proto file /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/model/_iter_25000.caffemodel
+I1105 20:04:05.727175 13435 net.cpp:948] Serializing 13 layers
+I1105 20:04:05.952750 13435 solver.cpp:755] Snapshotting solver state to binary proto file /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/model/_iter_25000.solverstate
+I1105 20:04:06.043086 13435 solver.cpp:349] Iteration 25000, Testing net (#0)
+I1105 20:04:06.043105 13435 net.cpp:781] Copying source layer data
+I1105 20:04:06.043110 13435 net.cpp:781] Copying source layer conv1
+I1105 20:04:06.043120 13435 net.cpp:781] Copying source layer relu1
+I1105 20:04:06.043123 13435 net.cpp:781] Copying source layer pool1
+I1105 20:04:06.043125 13435 net.cpp:781] Copying source layer conv2
+I1105 20:04:06.043128 13435 net.cpp:781] Copying source layer relu2
+I1105 20:04:06.043130 13435 net.cpp:781] Copying source layer pool2
+I1105 20:04:06.043133 13435 net.cpp:781] Copying source layer conv3
+I1105 20:04:06.043135 13435 net.cpp:781] Copying source layer relu3
+I1105 20:04:06.043140 13435 net.cpp:781] Copying source layer fc4
+I1105 20:04:06.043154 13435 net.cpp:781] Copying source layer relu4
+I1105 20:04:06.043156 13435 net.cpp:781] Copying source layer fc5
+I1105 20:04:06.043159 13435 net.cpp:781] Copying source layer loss
+E1105 20:04:10.458884 13449 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110811.batch : 0
+E1105 20:04:10.479099 13449 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110811.batch : 0
+E1105 20:04:10.485329 13435 solver.cpp:417]     Test net output #0: loss = 0.012384 (* 1 = 0.012384 loss)
+I1105 20:04:10.694985 13435 solver.cpp:243] Iteration 25000, loss = 0.0048302
+I1105 20:04:10.695024 13435 solver.cpp:592] Iteration 25000, lr = 0.001
+I1105 20:04:11.671811 13435 solver.cpp:243] Iteration 25005, loss = 0.00378691
+I1105 20:04:11.671851 13435 solver.cpp:592] Iteration 25005, lr = 0.001
+I1105 20:04:12.697950 13435 solver.cpp:243] Iteration 25010, loss = 0.00471756
+I1105 20:04:12.697989 13435 solver.cpp:592] Iteration 25010, lr = 0.001
+I1105 20:04:13.694494 13435 solver.cpp:243] Iteration 25015, loss = 0.00426872
+I1105 20:04:13.694519 13435 solver.cpp:592] Iteration 25015, lr = 0.001
+I1105 20:04:14.656994 13435 solver.cpp:243] Iteration 25020, loss = 0.00408339
+I1105 20:04:14.657022 13435 solver.cpp:592] Iteration 25020, lr = 0.001
+I1105 20:04:15.664603 13435 solver.cpp:243] Iteration 25025, loss = 0.00444901
+I1105 20:04:15.664633 13435 solver.cpp:592] Iteration 25025, lr = 0.001
+I1105 20:04:16.708849 13435 solver.cpp:243] Iteration 25030, loss = 0.00463535
+I1105 20:04:16.708878 13435 solver.cpp:592] Iteration 25030, lr = 0.001
+E1105 20:04:16.999805 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101006.batch : 6
+E1105 20:04:17.019321 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100806.batch : 7
+I1105 20:04:17.731474 13435 solver.cpp:243] Iteration 25035, loss = 0.00707989
+I1105 20:04:17.731503 13435 solver.cpp:592] Iteration 25035, lr = 0.001
+I1105 20:04:18.674199 13435 solver.cpp:243] Iteration 25040, loss = 0.0207043
+I1105 20:04:18.674252 13435 solver.cpp:592] Iteration 25040, lr = 0.001
+I1105 20:04:19.678812 13435 solver.cpp:243] Iteration 25045, loss = 0.0179791
+I1105 20:04:19.678840 13435 solver.cpp:592] Iteration 25045, lr = 0.001
+I1105 20:04:20.731849 13435 solver.cpp:243] Iteration 25050, loss = 0.0140459
+I1105 20:04:20.731878 13435 solver.cpp:592] Iteration 25050, lr = 0.001
+I1105 20:04:21.701071 13435 solver.cpp:243] Iteration 25055, loss = 0.0142066
+I1105 20:04:21.701104 13435 solver.cpp:592] Iteration 25055, lr = 0.001
+I1105 20:04:22.745746 13435 solver.cpp:243] Iteration 25060, loss = 0.0108084
+I1105 20:04:22.745793 13435 solver.cpp:592] Iteration 25060, lr = 0.001
+I1105 20:04:23.746021 13435 solver.cpp:243] Iteration 25065, loss = 0.0112547
+I1105 20:04:23.746048 13435 solver.cpp:592] Iteration 25065, lr = 0.001
+I1105 20:04:24.748972 13435 solver.cpp:243] Iteration 25070, loss = 0.0145203
+I1105 20:04:24.749001 13435 solver.cpp:592] Iteration 25070, lr = 0.001
+I1105 20:04:25.713492 13435 solver.cpp:243] Iteration 25075, loss = 0.0101196
+I1105 20:04:25.713520 13435 solver.cpp:592] Iteration 25075, lr = 0.001
+I1105 20:04:26.750212 13435 solver.cpp:243] Iteration 25080, loss = 0.0124304
+I1105 20:04:26.750241 13435 solver.cpp:592] Iteration 25080, lr = 0.001
+I1105 20:04:27.749727 13435 solver.cpp:243] Iteration 25085, loss = 0.0117041
+I1105 20:04:27.749752 13435 solver.cpp:592] Iteration 25085, lr = 0.001
+I1105 20:04:28.752427 13435 solver.cpp:243] Iteration 25090, loss = 0.0105573
+I1105 20:04:28.752452 13435 solver.cpp:592] Iteration 25090, lr = 0.001
+I1105 20:04:29.746338 13435 solver.cpp:243] Iteration 25095, loss = 0.0131143
+I1105 20:04:29.746367 13435 solver.cpp:592] Iteration 25095, lr = 0.001
+I1105 20:04:30.748097 13435 solver.cpp:243] Iteration 25100, loss = 0.0137447
+I1105 20:04:30.748127 13435 solver.cpp:592] Iteration 25100, lr = 0.001
+I1105 20:04:31.753005 13435 solver.cpp:243] Iteration 25105, loss = 0.0112581
+I1105 20:04:31.753043 13435 solver.cpp:592] Iteration 25105, lr = 0.001
+I1105 20:04:32.759214 13435 solver.cpp:243] Iteration 25110, loss = 0.0128943
+I1105 20:04:32.759243 13435 solver.cpp:592] Iteration 25110, lr = 0.001
+I1105 20:04:33.766023 13435 solver.cpp:243] Iteration 25115, loss = 0.0117605
+I1105 20:04:33.766052 13435 solver.cpp:592] Iteration 25115, lr = 0.001
+I1105 20:04:34.768965 13435 solver.cpp:243] Iteration 25120, loss = 0.0123079
+I1105 20:04:34.769140 13435 solver.cpp:592] Iteration 25120, lr = 0.001
+I1105 20:04:35.774051 13435 solver.cpp:243] Iteration 25125, loss = 0.01156
+I1105 20:04:35.774090 13435 solver.cpp:592] Iteration 25125, lr = 0.001
+I1105 20:04:36.739876 13435 solver.cpp:243] Iteration 25130, loss = 0.0144259
+I1105 20:04:36.739907 13435 solver.cpp:592] Iteration 25130, lr = 0.001
+E1105 20:04:37.704928 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110709.batch : 8
+E1105 20:04:37.706038 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100829.batch : 9
+I1105 20:04:37.707206 13435 solver.cpp:243] Iteration 25135, loss = 0.0103116
+I1105 20:04:37.707248 13435 solver.cpp:592] Iteration 25135, lr = 0.001
+I1105 20:04:38.737928 13435 solver.cpp:243] Iteration 25140, loss = 0.0124973
+I1105 20:04:38.737967 13435 solver.cpp:592] Iteration 25140, lr = 0.001
+I1105 20:04:39.778450 13435 solver.cpp:243] Iteration 25145, loss = 0.00637353
+I1105 20:04:39.778481 13435 solver.cpp:592] Iteration 25145, lr = 0.001
+I1105 20:04:40.785778 13435 solver.cpp:243] Iteration 25150, loss = 0.00489235
+I1105 20:04:40.785804 13435 solver.cpp:592] Iteration 25150, lr = 0.001
+E1105 20:04:41.333709 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100909.batch : 10
+E1105 20:04:41.342358 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101008.batch : 11
+I1105 20:04:41.777753 13435 solver.cpp:243] Iteration 25155, loss = 0.00531238
+I1105 20:04:41.777791 13435 solver.cpp:592] Iteration 25155, lr = 0.001
+I1105 20:04:42.774776 13435 solver.cpp:243] Iteration 25160, loss = 0.0111925
+I1105 20:04:42.774814 13435 solver.cpp:592] Iteration 25160, lr = 0.001
+I1105 20:04:43.779579 13435 solver.cpp:243] Iteration 25165, loss = 0.00832047
+I1105 20:04:43.779618 13435 solver.cpp:592] Iteration 25165, lr = 0.001
+I1105 20:04:44.788879 13435 solver.cpp:243] Iteration 25170, loss = 0.0106042
+I1105 20:04:44.788905 13435 solver.cpp:592] Iteration 25170, lr = 0.001
+I1105 20:04:45.785462 13435 solver.cpp:243] Iteration 25175, loss = 0.00827888
+I1105 20:04:45.785490 13435 solver.cpp:592] Iteration 25175, lr = 0.001
+I1105 20:04:46.741557 13435 solver.cpp:243] Iteration 25180, loss = 0.00917121
+I1105 20:04:46.741608 13435 solver.cpp:592] Iteration 25180, lr = 0.001
+I1105 20:04:47.781302 13435 solver.cpp:243] Iteration 25185, loss = 0.00646567
+I1105 20:04:47.781333 13435 solver.cpp:592] Iteration 25185, lr = 0.001
+I1105 20:04:48.785310 13435 solver.cpp:243] Iteration 25190, loss = 0.00406527
+I1105 20:04:48.785347 13435 solver.cpp:592] Iteration 25190, lr = 0.001
+E1105 20:04:49.652528 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101003.batch : 12
+E1105 20:04:49.664018 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100822.batch : 0
+I1105 20:04:49.802208 13435 solver.cpp:243] Iteration 25195, loss = 0.00344854
+I1105 20:04:49.802240 13435 solver.cpp:592] Iteration 25195, lr = 0.001
+I1105 20:04:50.741231 13435 solver.cpp:243] Iteration 25200, loss = 0.00790254
+I1105 20:04:50.741273 13435 solver.cpp:592] Iteration 25200, lr = 0.001
+I1105 20:04:51.749640 13435 solver.cpp:243] Iteration 25205, loss = 0.0124148
+I1105 20:04:51.749670 13435 solver.cpp:592] Iteration 25205, lr = 0.001
+I1105 20:04:52.794684 13435 solver.cpp:243] Iteration 25210, loss = 0.0111211
+I1105 20:04:52.794713 13435 solver.cpp:592] Iteration 25210, lr = 0.001
+I1105 20:04:53.752641 13435 solver.cpp:243] Iteration 25215, loss = 0.010125
+I1105 20:04:53.752667 13435 solver.cpp:592] Iteration 25215, lr = 0.001
+I1105 20:04:54.753715 13435 solver.cpp:243] Iteration 25220, loss = 0.00757351
+I1105 20:04:54.753756 13435 solver.cpp:592] Iteration 25220, lr = 0.001
+I1105 20:04:55.795099 13435 solver.cpp:243] Iteration 25225, loss = 0.00915341
+I1105 20:04:55.795140 13435 solver.cpp:592] Iteration 25225, lr = 0.001
+I1105 20:04:56.758286 13435 solver.cpp:243] Iteration 25230, loss = 0.00939575
+I1105 20:04:56.758353 13435 solver.cpp:592] Iteration 25230, lr = 0.001
+I1105 20:04:57.766875 13435 solver.cpp:243] Iteration 25235, loss = 0.00892487
+I1105 20:04:57.766906 13435 solver.cpp:592] Iteration 25235, lr = 0.001
+I1105 20:04:58.805246 13435 solver.cpp:243] Iteration 25240, loss = 0.00850448
+I1105 20:04:58.805275 13435 solver.cpp:592] Iteration 25240, lr = 0.001
+I1105 20:04:59.765866 13435 solver.cpp:243] Iteration 25245, loss = 0.00831001
+I1105 20:04:59.765897 13435 solver.cpp:592] Iteration 25245, lr = 0.001
+I1105 20:05:00.821164 13435 solver.cpp:243] Iteration 25250, loss = 0.00791032
+I1105 20:05:00.821193 13435 solver.cpp:592] Iteration 25250, lr = 0.001
+I1105 20:05:01.822832 13435 solver.cpp:243] Iteration 25255, loss = 0.00867539
+I1105 20:05:01.822860 13435 solver.cpp:592] Iteration 25255, lr = 0.001
+I1105 20:05:02.823271 13435 solver.cpp:243] Iteration 25260, loss = 0.00843351
+I1105 20:05:02.823297 13435 solver.cpp:592] Iteration 25260, lr = 0.001
+I1105 20:05:03.828146 13435 solver.cpp:243] Iteration 25265, loss = 0.0082146
+I1105 20:05:03.828172 13435 solver.cpp:592] Iteration 25265, lr = 0.001
+I1105 20:05:04.788818 13435 solver.cpp:243] Iteration 25270, loss = 0.00987621
+I1105 20:05:04.788892 13435 solver.cpp:592] Iteration 25270, lr = 0.001
+I1105 20:05:05.821415 13435 solver.cpp:243] Iteration 25275, loss = 0.00893768
+I1105 20:05:05.821442 13435 solver.cpp:592] Iteration 25275, lr = 0.001
+I1105 20:05:06.826297 13435 solver.cpp:243] Iteration 25280, loss = 0.00914821
+I1105 20:05:06.826323 13435 solver.cpp:592] Iteration 25280, lr = 0.001
+I1105 20:05:07.792945 13435 solver.cpp:243] Iteration 25285, loss = 0.00839201
+I1105 20:05:07.792971 13435 solver.cpp:592] Iteration 25285, lr = 0.001
+I1105 20:05:08.829756 13435 solver.cpp:243] Iteration 25290, loss = 0.00910536
+I1105 20:05:08.829787 13435 solver.cpp:592] Iteration 25290, lr = 0.001
+I1105 20:05:09.823206 13435 solver.cpp:243] Iteration 25295, loss = 0.00853086
+I1105 20:05:09.823233 13435 solver.cpp:592] Iteration 25295, lr = 0.001
+I1105 20:05:10.782649 13435 solver.cpp:243] Iteration 25300, loss = 0.00942853
+I1105 20:05:10.782677 13435 solver.cpp:592] Iteration 25300, lr = 0.001
+I1105 20:05:11.828451 13435 solver.cpp:243] Iteration 25305, loss = 0.00985361
+I1105 20:05:11.828480 13435 solver.cpp:592] Iteration 25305, lr = 0.001
+I1105 20:05:12.807860 13435 solver.cpp:243] Iteration 25310, loss = 0.00879074
+I1105 20:05:12.807891 13435 solver.cpp:592] Iteration 25310, lr = 0.001
+E1105 20:05:13.210983 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100829.batch : 1
+E1105 20:05:13.214929 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100929.batch : 2
+I1105 20:05:13.851863 13435 solver.cpp:243] Iteration 25315, loss = 0.00801785
+I1105 20:05:13.851891 13435 solver.cpp:592] Iteration 25315, lr = 0.001
+I1105 20:05:14.807178 13435 solver.cpp:243] Iteration 25320, loss = 0.0111996
+I1105 20:05:14.807210 13435 solver.cpp:592] Iteration 25320, lr = 0.001
+I1105 20:05:15.830409 13435 solver.cpp:243] Iteration 25325, loss = 0.0114874
+I1105 20:05:15.830440 13435 solver.cpp:592] Iteration 25325, lr = 0.001
+I1105 20:05:16.867121 13435 solver.cpp:243] Iteration 25330, loss = 0.00748856
+I1105 20:05:16.867148 13435 solver.cpp:592] Iteration 25330, lr = 0.001
+I1105 20:05:17.861737 13435 solver.cpp:243] Iteration 25335, loss = 0.0107681
+I1105 20:05:17.861763 13435 solver.cpp:592] Iteration 25335, lr = 0.001
+I1105 20:05:18.826763 13435 solver.cpp:243] Iteration 25340, loss = 0.00968742
+I1105 20:05:18.826792 13435 solver.cpp:592] Iteration 25340, lr = 0.001
+I1105 20:05:19.861879 13435 solver.cpp:243] Iteration 25345, loss = 0.00952655
+I1105 20:05:19.861915 13435 solver.cpp:592] Iteration 25345, lr = 0.001
+I1105 20:05:20.862390 13435 solver.cpp:243] Iteration 25350, loss = 0.00816461
+I1105 20:05:20.862432 13435 solver.cpp:592] Iteration 25350, lr = 0.001
+I1105 20:05:21.862552 13435 solver.cpp:243] Iteration 25355, loss = 0.0105333
+I1105 20:05:21.862587 13435 solver.cpp:592] Iteration 25355, lr = 0.001
+I1105 20:05:22.817775 13435 solver.cpp:243] Iteration 25360, loss = 0.0089015
+I1105 20:05:22.817811 13435 solver.cpp:592] Iteration 25360, lr = 0.001
+I1105 20:05:23.851416 13435 solver.cpp:243] Iteration 25365, loss = 0.0108709
+I1105 20:05:23.851454 13435 solver.cpp:592] Iteration 25365, lr = 0.001
+I1105 20:05:24.818014 13435 solver.cpp:243] Iteration 25370, loss = 0.00960209
+I1105 20:05:24.818048 13435 solver.cpp:592] Iteration 25370, lr = 0.001
+I1105 20:05:25.852960 13435 solver.cpp:243] Iteration 25375, loss = 0.00985622
+I1105 20:05:25.852987 13435 solver.cpp:592] Iteration 25375, lr = 0.001
+I1105 20:05:26.809597 13435 solver.cpp:243] Iteration 25380, loss = 0.0119149
+I1105 20:05:26.809630 13435 solver.cpp:592] Iteration 25380, lr = 0.001
+E1105 20:05:27.120163 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100730.batch : 3
+E1105 20:05:27.121484 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101003.batch : 4
+I1105 20:05:27.853312 13435 solver.cpp:243] Iteration 25385, loss = 0.00835311
+I1105 20:05:27.853350 13435 solver.cpp:592] Iteration 25385, lr = 0.001
+I1105 20:05:28.813426 13435 solver.cpp:243] Iteration 25390, loss = 0.0122759
+I1105 20:05:28.813482 13435 solver.cpp:592] Iteration 25390, lr = 0.001
+I1105 20:05:29.833757 13435 solver.cpp:243] Iteration 25395, loss = 0.00911998
+I1105 20:05:29.833791 13435 solver.cpp:592] Iteration 25395, lr = 0.001
+I1105 20:05:30.850008 13435 solver.cpp:243] Iteration 25400, loss = 0.00824765
+I1105 20:05:30.850040 13435 solver.cpp:592] Iteration 25400, lr = 0.001
+I1105 20:05:31.892629 13435 solver.cpp:243] Iteration 25405, loss = 0.00770384
+I1105 20:05:31.892657 13435 solver.cpp:592] Iteration 25405, lr = 0.001
+I1105 20:05:32.896870 13435 solver.cpp:243] Iteration 25410, loss = 0.00630858
+I1105 20:05:32.896895 13435 solver.cpp:592] Iteration 25410, lr = 0.001
+I1105 20:05:33.886962 13435 solver.cpp:243] Iteration 25415, loss = 0.00789463
+I1105 20:05:33.886988 13435 solver.cpp:592] Iteration 25415, lr = 0.001
+I1105 20:05:34.845029 13435 solver.cpp:243] Iteration 25420, loss = 0.00671
+I1105 20:05:34.845144 13435 solver.cpp:592] Iteration 25420, lr = 0.001
+I1105 20:05:35.848997 13435 solver.cpp:243] Iteration 25425, loss = 0.00777586
+I1105 20:05:35.849030 13435 solver.cpp:592] Iteration 25425, lr = 0.001
+E1105 20:05:36.587313 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101006.batch : 5
+E1105 20:05:36.606227 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110720.batch : 6
+I1105 20:05:36.921649 13435 solver.cpp:243] Iteration 25430, loss = 0.00613743
+I1105 20:05:36.921677 13435 solver.cpp:592] Iteration 25430, lr = 0.001
+I1105 20:05:37.901428 13435 solver.cpp:243] Iteration 25435, loss = 0.0118155
+I1105 20:05:37.901458 13435 solver.cpp:592] Iteration 25435, lr = 0.001
+I1105 20:05:38.862860 13435 solver.cpp:243] Iteration 25440, loss = 0.0122408
+I1105 20:05:38.862885 13435 solver.cpp:592] Iteration 25440, lr = 0.001
+I1105 20:05:39.896513 13435 solver.cpp:243] Iteration 25445, loss = 0.012078
+I1105 20:05:39.896538 13435 solver.cpp:592] Iteration 25445, lr = 0.001
+I1105 20:05:40.852012 13435 solver.cpp:243] Iteration 25450, loss = 0.00883773
+I1105 20:05:40.852042 13435 solver.cpp:592] Iteration 25450, lr = 0.001
+I1105 20:05:41.893405 13435 solver.cpp:243] Iteration 25455, loss = 0.0131359
+I1105 20:05:41.893430 13435 solver.cpp:592] Iteration 25455, lr = 0.001
+I1105 20:05:42.903548 13435 solver.cpp:243] Iteration 25460, loss = 0.00911442
+I1105 20:05:42.903574 13435 solver.cpp:592] Iteration 25460, lr = 0.001
+I1105 20:05:43.905884 13435 solver.cpp:243] Iteration 25465, loss = 0.0109408
+I1105 20:05:43.905911 13435 solver.cpp:592] Iteration 25465, lr = 0.001
+I1105 20:05:44.911219 13435 solver.cpp:243] Iteration 25470, loss = 0.0109273
+I1105 20:05:44.911247 13435 solver.cpp:592] Iteration 25470, lr = 0.001
+I1105 20:05:45.887568 13435 solver.cpp:243] Iteration 25475, loss = 0.00863255
+I1105 20:05:45.887608 13435 solver.cpp:592] Iteration 25475, lr = 0.001
+I1105 20:05:46.891917 13435 solver.cpp:243] Iteration 25480, loss = 0.0110369
+I1105 20:05:46.891957 13435 solver.cpp:592] Iteration 25480, lr = 0.001
+I1105 20:05:47.929108 13435 solver.cpp:243] Iteration 25485, loss = 0.00827857
+I1105 20:05:47.929144 13435 solver.cpp:592] Iteration 25485, lr = 0.001
+I1105 20:05:48.927327 13435 solver.cpp:243] Iteration 25490, loss = 0.00994689
+I1105 20:05:48.927357 13435 solver.cpp:592] Iteration 25490, lr = 0.001
+I1105 20:05:49.892354 13435 solver.cpp:243] Iteration 25495, loss = 0.00840065
+I1105 20:05:49.892391 13435 solver.cpp:592] Iteration 25495, lr = 0.001
+I1105 20:05:50.890648 13435 solver.cpp:243] Iteration 25500, loss = 0.0102762
+I1105 20:05:50.890691 13435 solver.cpp:592] Iteration 25500, lr = 0.001
+E1105 20:05:51.059391 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100909.batch : 7
+E1105 20:05:51.068738 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110710.batch : 8
+I1105 20:05:51.938596 13435 solver.cpp:243] Iteration 25505, loss = 0.0103301
+I1105 20:05:51.938626 13435 solver.cpp:592] Iteration 25505, lr = 0.001
+I1105 20:05:52.905256 13435 solver.cpp:243] Iteration 25510, loss = 0.00881009
+I1105 20:05:52.905287 13435 solver.cpp:592] Iteration 25510, lr = 0.001
+I1105 20:05:53.952383 13435 solver.cpp:243] Iteration 25515, loss = 0.00691399
+I1105 20:05:53.952414 13435 solver.cpp:592] Iteration 25515, lr = 0.001
+I1105 20:05:54.956445 13435 solver.cpp:243] Iteration 25520, loss = 0.00753854
+I1105 20:05:54.956475 13435 solver.cpp:592] Iteration 25520, lr = 0.001
+I1105 20:05:55.919736 13435 solver.cpp:243] Iteration 25525, loss = 0.00706353
+I1105 20:05:55.919766 13435 solver.cpp:592] Iteration 25525, lr = 0.001
+I1105 20:05:56.964818 13435 solver.cpp:243] Iteration 25530, loss = 0.00705759
+I1105 20:05:56.964854 13435 solver.cpp:592] Iteration 25530, lr = 0.001
+I1105 20:05:57.957180 13435 solver.cpp:243] Iteration 25535, loss = 0.00648763
+I1105 20:05:57.957216 13435 solver.cpp:592] Iteration 25535, lr = 0.001
+I1105 20:05:58.953877 13435 solver.cpp:243] Iteration 25540, loss = 0.00600607
+I1105 20:05:58.953922 13435 solver.cpp:592] Iteration 25540, lr = 0.001
+I1105 20:05:59.956825 13435 solver.cpp:243] Iteration 25545, loss = 0.00537481
+I1105 20:05:59.956851 13435 solver.cpp:592] Iteration 25545, lr = 0.001
+I1105 20:06:00.954517 13435 solver.cpp:243] Iteration 25550, loss = 0.00650484
+I1105 20:06:00.954553 13435 solver.cpp:592] Iteration 25550, lr = 0.001
+E1105 20:06:01.668259 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110725.batch : 9
+E1105 20:06:01.695852 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101008.batch : 10
+I1105 20:06:01.967056 13435 solver.cpp:243] Iteration 25555, loss = 0.00531102
+I1105 20:06:01.967087 13435 solver.cpp:592] Iteration 25555, lr = 0.001
+I1105 20:06:02.904726 13435 solver.cpp:243] Iteration 25560, loss = 0.00692655
+I1105 20:06:02.904754 13435 solver.cpp:592] Iteration 25560, lr = 0.001
+I1105 20:06:03.945636 13435 solver.cpp:243] Iteration 25565, loss = 0.00913352
+I1105 20:06:03.945672 13435 solver.cpp:592] Iteration 25565, lr = 0.001
+I1105 20:06:05.030694 13435 solver.cpp:243] Iteration 25570, loss = 0.00733505
+I1105 20:06:05.030798 13435 solver.cpp:592] Iteration 25570, lr = 0.001
+I1105 20:06:05.990731 13435 solver.cpp:243] Iteration 25575, loss = 0.00622181
+I1105 20:06:05.990757 13435 solver.cpp:592] Iteration 25575, lr = 0.001
+I1105 20:06:07.033388 13435 solver.cpp:243] Iteration 25580, loss = 0.00619777
+I1105 20:06:07.033427 13435 solver.cpp:592] Iteration 25580, lr = 0.001
+I1105 20:06:08.013278 13435 solver.cpp:243] Iteration 25585, loss = 0.00666376
+I1105 20:06:08.013319 13435 solver.cpp:592] Iteration 25585, lr = 0.001
+I1105 20:06:09.021831 13435 solver.cpp:243] Iteration 25590, loss = 0.00824574
+I1105 20:06:09.021872 13435 solver.cpp:592] Iteration 25590, lr = 0.001
+I1105 20:06:10.031954 13435 solver.cpp:243] Iteration 25595, loss = 0.00706031
+I1105 20:06:10.031993 13435 solver.cpp:592] Iteration 25595, lr = 0.001
+I1105 20:06:11.031944 13435 solver.cpp:243] Iteration 25600, loss = 0.0062744
+I1105 20:06:11.031972 13435 solver.cpp:592] Iteration 25600, lr = 0.001
+I1105 20:06:12.070148 13435 solver.cpp:243] Iteration 25605, loss = 0.00561714
+I1105 20:06:12.070204 13435 solver.cpp:592] Iteration 25605, lr = 0.001
+I1105 20:06:13.148007 13435 solver.cpp:243] Iteration 25610, loss = 0.00589536
+I1105 20:06:13.148044 13435 solver.cpp:592] Iteration 25610, lr = 0.001
+I1105 20:06:14.104657 13435 solver.cpp:243] Iteration 25615, loss = 0.0055518
+I1105 20:06:14.104689 13435 solver.cpp:592] Iteration 25615, lr = 0.001
+I1105 20:06:15.152149 13435 solver.cpp:243] Iteration 25620, loss = 0.00688416
+I1105 20:06:15.152181 13435 solver.cpp:592] Iteration 25620, lr = 0.001
+I1105 20:06:16.150820 13435 solver.cpp:243] Iteration 25625, loss = 0.00626531
+I1105 20:06:16.150856 13435 solver.cpp:592] Iteration 25625, lr = 0.001
+I1105 20:06:17.151144 13435 solver.cpp:243] Iteration 25630, loss = 0.00694727
+I1105 20:06:17.151181 13435 solver.cpp:592] Iteration 25630, lr = 0.001
+I1105 20:06:18.187685 13435 solver.cpp:243] Iteration 25635, loss = 0.00668362
+I1105 20:06:18.187716 13435 solver.cpp:592] Iteration 25635, lr = 0.001
+I1105 20:06:19.184422 13435 solver.cpp:243] Iteration 25640, loss = 0.00511845
+I1105 20:06:19.184464 13435 solver.cpp:592] Iteration 25640, lr = 0.001
+I1105 20:06:20.226079 13435 solver.cpp:243] Iteration 25645, loss = 0.00471857
+I1105 20:06:20.226105 13435 solver.cpp:592] Iteration 25645, lr = 0.001
+I1105 20:06:21.257254 13435 solver.cpp:243] Iteration 25650, loss = 0.00562602
+I1105 20:06:21.257293 13435 solver.cpp:592] Iteration 25650, lr = 0.001
+E1105 20:06:21.552848 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110709.batch : 11
+E1105 20:06:21.553896 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100806.batch : 12
+I1105 20:06:22.288432 13435 solver.cpp:243] Iteration 25655, loss = 0.00750023
+I1105 20:06:22.288471 13435 solver.cpp:592] Iteration 25655, lr = 0.001
+I1105 20:06:23.295395 13435 solver.cpp:243] Iteration 25660, loss = 0.0194993
+I1105 20:06:23.295433 13435 solver.cpp:592] Iteration 25660, lr = 0.001
+I1105 20:06:24.264485 13435 solver.cpp:243] Iteration 25665, loss = 0.0177818
+I1105 20:06:24.264519 13435 solver.cpp:592] Iteration 25665, lr = 0.001
+I1105 20:06:25.361511 13435 solver.cpp:243] Iteration 25670, loss = 0.0164051
+I1105 20:06:25.361552 13435 solver.cpp:592] Iteration 25670, lr = 0.001
+I1105 20:06:26.394491 13435 solver.cpp:243] Iteration 25675, loss = 0.0155622
+I1105 20:06:26.394527 13435 solver.cpp:592] Iteration 25675, lr = 0.001
+I1105 20:06:27.426465 13435 solver.cpp:243] Iteration 25680, loss = 0.014995
+I1105 20:06:27.426503 13435 solver.cpp:592] Iteration 25680, lr = 0.001
+I1105 20:06:28.403113 13435 solver.cpp:243] Iteration 25685, loss = 0.017124
+I1105 20:06:28.403149 13435 solver.cpp:592] Iteration 25685, lr = 0.001
+I1105 20:06:29.405187 13435 solver.cpp:243] Iteration 25690, loss = 0.0155247
+I1105 20:06:29.405243 13435 solver.cpp:592] Iteration 25690, lr = 0.001
+I1105 20:06:30.418898 13435 solver.cpp:243] Iteration 25695, loss = 0.0161751
+I1105 20:06:30.418941 13435 solver.cpp:592] Iteration 25695, lr = 0.001
+E1105 20:06:31.415715 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100730.batch : 0
+E1105 20:06:31.417498 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110709.batch : 1
+I1105 20:06:31.518805 13435 solver.cpp:243] Iteration 25700, loss = 0.0158286
+I1105 20:06:31.518834 13435 solver.cpp:592] Iteration 25700, lr = 0.001
+I1105 20:06:32.461072 13435 solver.cpp:243] Iteration 25705, loss = 0.0107198
+I1105 20:06:32.461108 13435 solver.cpp:592] Iteration 25705, lr = 0.001
+E1105 20:06:33.045349 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100909.batch : 2
+E1105 20:06:33.054767 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110725.batch : 3
+I1105 20:06:33.518645 13435 solver.cpp:243] Iteration 25710, loss = 0.00864505
+I1105 20:06:33.518683 13435 solver.cpp:592] Iteration 25710, lr = 0.001
+I1105 20:06:34.484079 13435 solver.cpp:243] Iteration 25715, loss = 0.00706712
+I1105 20:06:34.484122 13435 solver.cpp:592] Iteration 25715, lr = 0.001
+I1105 20:06:35.547791 13435 solver.cpp:243] Iteration 25720, loss = 0.00477314
+I1105 20:06:35.547946 13435 solver.cpp:592] Iteration 25720, lr = 0.001
+I1105 20:06:36.520298 13435 solver.cpp:243] Iteration 25725, loss = 0.00449083
+I1105 20:06:36.520339 13435 solver.cpp:592] Iteration 25725, lr = 0.001
+I1105 20:06:37.534345 13435 solver.cpp:243] Iteration 25730, loss = 0.00407936
+I1105 20:06:37.534399 13435 solver.cpp:592] Iteration 25730, lr = 0.001
+I1105 20:06:38.589658 13435 solver.cpp:243] Iteration 25735, loss = 0.0047484
+I1105 20:06:38.589701 13435 solver.cpp:592] Iteration 25735, lr = 0.001
+I1105 20:06:39.590384 13435 solver.cpp:243] Iteration 25740, loss = 0.00475154
+I1105 20:06:39.590411 13435 solver.cpp:592] Iteration 25740, lr = 0.001
+I1105 20:06:40.593910 13435 solver.cpp:243] Iteration 25745, loss = 0.00325346
+I1105 20:06:40.593942 13435 solver.cpp:592] Iteration 25745, lr = 0.001
+I1105 20:06:41.595568 13435 solver.cpp:243] Iteration 25750, loss = 0.00418404
+I1105 20:06:41.595597 13435 solver.cpp:592] Iteration 25750, lr = 0.001
+I1105 20:06:42.597791 13435 solver.cpp:243] Iteration 25755, loss = 0.00347378
+I1105 20:06:42.597828 13435 solver.cpp:592] Iteration 25755, lr = 0.001
+I1105 20:06:43.615646 13435 solver.cpp:243] Iteration 25760, loss = 0.00425052
+I1105 20:06:43.615687 13435 solver.cpp:592] Iteration 25760, lr = 0.001
+I1105 20:06:44.588336 13435 solver.cpp:243] Iteration 25765, loss = 0.00405193
+I1105 20:06:44.588368 13435 solver.cpp:592] Iteration 25765, lr = 0.001
+I1105 20:06:45.643275 13435 solver.cpp:243] Iteration 25770, loss = 0.00329736
+I1105 20:06:45.643316 13435 solver.cpp:592] Iteration 25770, lr = 0.001
+I1105 20:06:46.667781 13435 solver.cpp:243] Iteration 25775, loss = 0.00333567
+I1105 20:06:46.667811 13435 solver.cpp:592] Iteration 25775, lr = 0.001
+I1105 20:06:47.665915 13435 solver.cpp:243] Iteration 25780, loss = 0.003778
+I1105 20:06:47.665956 13435 solver.cpp:592] Iteration 25780, lr = 0.001
+I1105 20:06:48.738900 13435 solver.cpp:243] Iteration 25785, loss = 0.00385022
+I1105 20:06:48.738925 13435 solver.cpp:592] Iteration 25785, lr = 0.001
+I1105 20:06:49.694885 13435 solver.cpp:243] Iteration 25790, loss = 0.00324948
+I1105 20:06:49.694911 13435 solver.cpp:592] Iteration 25790, lr = 0.001
+I1105 20:06:50.734714 13435 solver.cpp:243] Iteration 25795, loss = 0.00419306
+I1105 20:06:50.734742 13435 solver.cpp:592] Iteration 25795, lr = 0.001
+I1105 20:06:51.732839 13435 solver.cpp:243] Iteration 25800, loss = 0.00346687
+I1105 20:06:51.732868 13435 solver.cpp:592] Iteration 25800, lr = 0.001
+I1105 20:06:52.730139 13435 solver.cpp:243] Iteration 25805, loss = 0.00470781
+I1105 20:06:52.730173 13435 solver.cpp:592] Iteration 25805, lr = 0.001
+I1105 20:06:53.683908 13435 solver.cpp:243] Iteration 25810, loss = 0.00349507
+I1105 20:06:53.683943 13435 solver.cpp:592] Iteration 25810, lr = 0.001
+I1105 20:06:54.700979 13435 solver.cpp:243] Iteration 25815, loss = 0.00358494
+I1105 20:06:54.701016 13435 solver.cpp:592] Iteration 25815, lr = 0.001
+I1105 20:06:55.715311 13435 solver.cpp:243] Iteration 25820, loss = 0.00415803
+I1105 20:06:55.715353 13435 solver.cpp:592] Iteration 25820, lr = 0.001
+E1105 20:06:56.242971 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20110720.batch : 4
+E1105 20:06:56.247328 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100929.batch : 5
+I1105 20:06:56.785778 13435 solver.cpp:243] Iteration 25825, loss = 0.00410237
+I1105 20:06:56.785812 13435 solver.cpp:592] Iteration 25825, lr = 0.001
+I1105 20:06:57.729744 13435 solver.cpp:243] Iteration 25830, loss = 0.0376448
+I1105 20:06:57.729776 13435 solver.cpp:592] Iteration 25830, lr = 0.001
+I1105 20:06:58.796282 13435 solver.cpp:243] Iteration 25835, loss = 0.0190383
+I1105 20:06:58.796309 13435 solver.cpp:592] Iteration 25835, lr = 0.001
+I1105 20:06:59.799588 13435 solver.cpp:243] Iteration 25840, loss = 0.0172258
+I1105 20:06:59.799643 13435 solver.cpp:592] Iteration 25840, lr = 0.001
+I1105 20:07:00.775846 13435 solver.cpp:243] Iteration 25845, loss = 0.0161961
+I1105 20:07:00.775884 13435 solver.cpp:592] Iteration 25845, lr = 0.001
+I1105 20:07:01.825695 13435 solver.cpp:243] Iteration 25850, loss = 0.0144087
+I1105 20:07:01.825726 13435 solver.cpp:592] Iteration 25850, lr = 0.001
+I1105 20:07:02.863502 13435 solver.cpp:243] Iteration 25855, loss = 0.0124865
+I1105 20:07:02.863543 13435 solver.cpp:592] Iteration 25855, lr = 0.001
+I1105 20:07:03.865131 13435 solver.cpp:243] Iteration 25860, loss = 0.0112789
+I1105 20:07:03.865170 13435 solver.cpp:592] Iteration 25860, lr = 0.001
+I1105 20:07:04.902732 13435 solver.cpp:243] Iteration 25865, loss = 0.0122938
+I1105 20:07:04.902770 13435 solver.cpp:592] Iteration 25865, lr = 0.001
+I1105 20:07:05.897855 13435 solver.cpp:243] Iteration 25870, loss = 0.0118775
+I1105 20:07:05.897972 13435 solver.cpp:592] Iteration 25870, lr = 0.001
+I1105 20:07:06.895761 13435 solver.cpp:243] Iteration 25875, loss = 0.0128864
+I1105 20:07:06.895798 13435 solver.cpp:592] Iteration 25875, lr = 0.001
+I1105 20:07:07.892006 13435 solver.cpp:243] Iteration 25880, loss = 0.0118025
+I1105 20:07:07.892045 13435 solver.cpp:592] Iteration 25880, lr = 0.001
+I1105 20:07:08.850179 13435 solver.cpp:243] Iteration 25885, loss = 0.0106108
+I1105 20:07:08.850220 13435 solver.cpp:592] Iteration 25885, lr = 0.001
+I1105 20:07:09.898254 13435 solver.cpp:243] Iteration 25890, loss = 0.0106733
+I1105 20:07:09.898282 13435 solver.cpp:592] Iteration 25890, lr = 0.001
+E1105 20:07:10.034281 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20101006.batch : 6
+E1105 20:07:10.053050 13441 datum_data_layer.cpp:113] /home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/20100822.batch : 7
+I1105 20:07:10.891283 13435 solver.cpp:243] Iteration 25895, loss = 0.0110703
+I1105 20:07:10.891312 13435 solver.cpp:592] Iteration 25895, lr = 0.001
+I1105 20:07:11.887404 13435 solver.cpp:243] Iteration 25900, loss = 0.00837511
+I1105 20:07:11.887433 13435 solver.cpp:592] Iteration 25900, lr = 0.001
+I1105 20:07:12.841275 13435 solver.cpp:243] Iteration 25905, loss = 0.00926443
+I1105 20:07:12.841318 13435 solver.cpp:592] Iteration 25905, lr = 0.001
+I1105 20:07:13.877040 13435 solver.cpp:243] Iteration 25910, loss = 0.00862849
+I1105 20:07:13.877079 13435 solver.cpp:592] Iteration 25910, lr = 0.001
+I1105 20:07:14.872391 13435 solver.cpp:243] Iteration 25915, loss = 0.0075836
+I1105 20:07:14.872428 13435 solver.cpp:592] Iteration 25915, lr = 0.001
+I1105 20:07:15.878556 13435 solver.cpp:243] Iteration 25920, loss = 0.00923419
+I1105 20:07:15.878583 13435 solver.cpp:592] Iteration 25920, lr = 0.001
+I1105 20:07:16.869161 13435 solver.cpp:243] Iteration 25925, loss = 0.00959783
+I1105 20:07:16.869191 13435 solver.cpp:592] Iteration 25925, lr = 0.001
+I1105 20:07:17.864094 13435 solver.cpp:243] Iteration 25930, loss = 0.00980939
+I1105 20:07:17.864128 13435 solver.cpp:592] Iteration 25930, lr = 0.001
+I1105 20:07:18.862037 13435 solver.cpp:243] Iteration 25935, loss = 0.00903039
+I1105 20:07:18.862076 13435 solver.cpp:592] Iteration 25935, lr = 0.001
+I1105 20:07:19.860599 13435 solver.cpp:243] Iteration 25940, loss = 0.00850582
+I1105 20:07:19.860635 13435 solver.cpp:592] Iteration 25940, lr = 0.001
+I1105 20:07:20.854830 13435 solver.cpp:243] Iteration 25945, loss = 0.00840073
+I1105 20:07:20.854854 13435 solver.cpp:592] Iteration 25945, lr = 0.001
+I1105 20:07:21.854317 13435 solver.cpp:243] Iteration 25950, loss = 0.00862434
+I1105 20:07:21.854354 13435 solver.cpp:592] Iteration 25950, lr = 0.001
+I1105 20:07:22.851498 13435 solver.cpp:243] Iteration 25955, loss = 0.0090192
+I1105 20:07:22.851526 13435 solver.cpp:592] Iteration 25955, lr = 0.001
+I1105 20:07:23.848145 13435 solver.cpp:243] Iteration 25960, loss = 0.00813615
+I1105 20:07:23.848179 13435 solver.cpp:592] Iteration 25960, lr = 0.001
+I1105 20:07:24.848652 13435 solver.cpp:243] Iteration 25965, loss = 0.00831289
+I1105 20:07:24.848680 13435 solver.cpp:592] Iteration 25965, lr = 0.001
+I1105 20:07:25.844755 13435 solver.cpp:243] Iteration 25970, loss = 0.00786375
+I1105 20:07:25.844794 13435 solver.cpp:592] Iteration 25970, lr = 0.001

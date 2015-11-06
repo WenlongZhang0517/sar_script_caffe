@@ -1,3 +1,22 @@
+net: "$net"
+base_lr: 0.001
+lr_policy: "step"
+gamma: 0.1
+stepsize: 50000
+display: 5
+max_iter: 450000
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 5000
+snapshot_prefix: "$snapshot"
+solver_mode: GPU
+random_seed: 1700
+average_loss: 5
+test_interval: 1000
+test_iter: 70
+#debug_info: true
+
+##splitmark##
 name: "CaffeNet"
 layer {
   name: "data"
@@ -5,8 +24,8 @@ layer {
   top: "data"
   top: "label"
   datum_data_param {
-    source: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/train_source.txt"
-    mean_file: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/mean_std.txt"
+    source: "$train_source"
+    mean_file: "$train_mean"
     shuffle: true
     batch_size: 128
     label_scale: 0.1
@@ -15,7 +34,7 @@ layer {
     crop_size: 41
     mirror: true
     rotate: true
-    mean_value_file: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/mean_std.txt" 
+    mean_value_file: "$train_mean" 
   }
   include: { phase: TRAIN }
 }
@@ -26,8 +45,8 @@ layer {
   top: "data"
   top: "label"
   datum_data_param {
-    source: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/batch/test_source.txt"
-    mean_file: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/mean_std.txt"
+    source: "$test_source"
+    mean_file: "$train_mean"
     shuffle: true
     batch_size: 128
     label_scale: 0.1
@@ -36,7 +55,7 @@ layer {
     crop_size: 41
     mirror: false
     rotate: false
-    mean_value_file: "/home/lein/sar_dnn/dataset/beaufort_2010_2011/batches_45/mean_std.txt" 
+    mean_value_file: "$train_mean" 
   }
   include: { phase: TEST }
 }
